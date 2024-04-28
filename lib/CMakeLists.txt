@@ -1,4 +1,6 @@
 include(FetchContent)
+
+# grpc
 set(ABSL_PROPAGATE_CXX_STD ON)
 # PREFIX
 set(CMAKE_INSTALL_PREFIX ${CMAKE_BINARY_DIR}/install)
@@ -18,3 +20,13 @@ FetchContent_Declare(
 )
 set(FETCHCONTENT_QUIET OFF)
 FetchContent_MakeAvailable(gRPC)
+
+# sqlite3
+include_directories(sqlite)
+add_subdirectory(sqlite)
+
+# gtest
+add_subdirectory(googletest)
+
+# glog
+add_subdirectory(glog)

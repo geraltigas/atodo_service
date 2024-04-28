@@ -1,6 +1,6 @@
-#include <iostream>
+#include "app.h"
 
-int main() {
-    std::cout << "Hello, World!" << std::endl;
+int main(int argc, char* argv[]) {
+    app::init(argc, argv);
     return 0;
 }
