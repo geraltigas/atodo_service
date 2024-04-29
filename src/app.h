@@ -6,6 +6,11 @@
 #define ATODO_SERVICE_APP_H
 
 namespace app {
+    namespace _init {
+        bool glog(int argc, char* argv[]);
+        bool meta_database();
+        bool app_database();
+    }
     void init(int argc, char* argv[]);
     void run();
     void exit();

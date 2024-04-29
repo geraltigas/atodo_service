@@ -10,7 +10,9 @@
 extern const std::string meta_database_file_path;
 
 namespace meta {
+    bool check_meta_database_existence();
     bool create_meta_database();
+    bool create_if_not_exist();
     bool delete_meta_database();
     std::string get_app_database_file_path();
     bool set_app_database_file_path(std::string file_path);

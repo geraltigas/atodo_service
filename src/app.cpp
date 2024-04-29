@@ -7,6 +7,8 @@
 #include <filesystem>
 #include "constant.h"
 #include "meta/meta.h"
+#include "interface/database.h"
+#include "component/sql_prepare.h"
 
 void SignalHandle(const char *data, size_t size) {
     std::string str = std::string(data, size);
@@ -43,7 +45,7 @@ int manage_log_dir() {
     return 0;
 }
 
-int init_glog(int argc, char *argv[]) {
+bool app::_init::glog(int argc, char *argv[]) {
     FLAGS_log_dir = LOG_DIR;
     manage_log_dir();
     if (argc == 0) {
@@ -55,10 +57,10 @@ int init_glog(int argc, char *argv[]) {
     google::InstallFailureWriter(&SignalHandle);
     // set log level
     FLAGS_stderrthreshold = google::GLOG_INFO;
-    return 0;
+    return true;
 }
 
-bool init_meta_database() {
+bool app::_init::meta_database() {
     if(meta::create_meta_database()) {
         LOG(INFO) << "Meta database created";
         return true;
@@ -68,8 +70,24 @@ bool init_meta_database() {
     }
 }
 
+bool app::_init::app_database() {
+    database::create_database();
+    sql_prepare::set_db(database::get_sqlite_db());
+    if (sql_prepare::sql_precompile()) {
+        LOG(INFO) << "App database initialized";
+        return true;
+    } else {
+        LOG(ERROR) << "App database initialization failed";
+        throw std::runtime_error("App database initialization failed");
+    }
+}
+
 void app::init(int argc, char *argv[]) {
-    init_glog(argc, argv);
-    init_meta_database();
+    _init::glog(argc, argv);
+    _init::meta_database();
+    _init::app_database();
+
+
+
     LOG(INFO) << "App initialized";
 }

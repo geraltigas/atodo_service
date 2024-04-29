@@ -15,9 +15,6 @@ std::map<std::string, std::string> meta_kv_name_type = {
 };
 
 bool meta::create_meta_database() {
-    if (std::filesystem::exists(meta_database_file_path)) {
-        return true;
-    }else {
         sqlite3 * db;
         int rc = sqlite3_open(meta_database_file_path.c_str(), &db);
         if (rc) {
@@ -44,7 +41,6 @@ bool meta::create_meta_database() {
         }
         sqlite3_close(db);
         return true;
-    }
 }
 
 std::string meta::get_app_database_file_path() {
@@ -90,6 +86,17 @@ bool meta::delete_meta_database() {
         std::filesystem::remove(meta_database_file_path);
     }
     return true;
+}
+
+bool meta::create_if_not_exist() {
+    if (!check_meta_database_existence()) {
+        return create_meta_database();
+    }
+    return true;
+}
+
+bool meta::check_meta_database_existence() {
+    return std::filesystem::exists(meta_database_file_path);
 }
 
 
