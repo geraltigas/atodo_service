@@ -12,17 +12,17 @@
 sqlite3 *database::g_db = nullptr;
 
 bool database::check_database_existence() {
-    meta::create_meta_database();
+    meta::create_if_not_exist();
     return std::filesystem::exists(meta::get_app_database_file_path());
 }
 
 std::string database::get_database_file_path() {
-    meta::create_meta_database();
+    meta::create_if_not_exist();
     return meta::get_app_database_file_path();
 }
 
 void database::set_database_file_path(std::string file_path) {
-    meta::create_meta_database();
+    meta::create_if_not_exist();
     meta::set_app_database_file_path(file_path);
 }
 
@@ -34,6 +34,7 @@ bool initialize_database(sqlite3 *db) {
         const char *sql = global::app_db_init_sql;
         int rc = sqlite3_exec(db, sql, nullptr, 0, &zErrMsg);
         if (rc != SQLITE_OK) {
+            LOG(ERROR) << "SQL error: " << zErrMsg;
             return false;
         }
         return true;
@@ -41,7 +42,7 @@ bool initialize_database(sqlite3 *db) {
 }
 
 bool database::create_database() {
-    meta::create_meta_database();
+    meta::create_if_not_exist();
     std::string file_path = meta::get_app_database_file_path();
     LOG(INFO) << "Creating database at " << file_path;
     if (std::filesystem::exists(file_path)) {
@@ -59,17 +60,28 @@ bool database::create_database() {
     }
 }
 
+#include <fstream>
+#include <iostream>
+
 bool database::delete_database() {
-    meta::create_meta_database();
+    // release the database
+    if (g_db != nullptr) {
+        sqlite3_close(g_db);
+        g_db = nullptr;
+    }
+    meta::create_if_not_exist();
     std::string file_path = meta::get_app_database_file_path();
-    if (std::filesystem::exists(file_path)) {
-        std::filesystem::remove(file_path);
+    if (!std::filesystem::exists(file_path)) {
         return true;
     }
+    std::filesystem::remove(file_path);
     return true;
 }
 
 sqlite3 *database::get_sqlite_db() {
+    if (g_db != nullptr) {
+        return g_db;
+    }
     if (check_database_existence()) {
         int rc = sqlite3_open(get_database_file_path().c_str(), &g_db);
         if (rc) {

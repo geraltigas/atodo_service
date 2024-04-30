@@ -38,8 +38,6 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(googletest)
 
-
-
 # Catch2
 #FetchContent_Declare(
 #  Catch2
@@ -48,14 +46,6 @@ FetchContent_MakeAvailable(googletest)
 #)
 #
 #FetchContent_MakeAvailable(Catch2)
-
-FetchContent_Declare(
-        gflags
-        GIT_REPOSITORY https://github.com/gflags/gflags.git
-        GIT_TAG        v2.2.2
-        GIT_SHALLOW TRUE
-)
-FetchContent_MakeAvailable(gflags)
 
 # glog
 #add_subdirectory(glog)
@@ -67,4 +57,11 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(glog)
 
-
+# jsoncpp
+FetchContent_Declare(
+        jsoncpp
+        GIT_REPOSITORY https://github.com/open-source-parsers/jsoncpp.git
+        GIT_TAG        1.9.5
+        GIT_SHALLOW TRUE
+)
+FetchContent_MakeAvailable(jsoncpp)

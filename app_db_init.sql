@@ -2,21 +2,21 @@
 drop table if exists tasks;
 
 -- Create the updated tasks table
-create table if not exists tasks
+create table if not exists task
 (
-  id             timestamp primary key,
-  root_task      timestamp,
+  id             integer primary key autoincrement,
+  root_task      integer,
   name           text,
   goal           text,
   deadline       timestamp,
   in_work_time   boolean,
-  status         text check ( status in ('created', 'in_progress', 'paused', 'suspended', 'done')),
-  parent_task    timestamp
+  status         integer,
+  parent_task    integer
 );
 
 -- Create indices for the tasks table
-create index if not exists tasks_id_idx on tasks (id);
-create index if not exists tasks_root_task_idx on tasks (root_task);
+create index if not exists task_id_idx on task (id);
+create index if not exists task_root_task_idx on task (root_task);
 -- create index if not exists tasks_name_idx on tasks (name);
 
 -- Drop the existing task_relation table if it exists
@@ -26,8 +26,8 @@ drop table if exists task_relation;
 create table if not exists task_relation
 (
   id     text primary key,
-  source timestamp,
-  target timestamp
+  source integer, -- the source task id
+  target integer  -- the target task id
 );
 
 -- Create indices for the task_relation table
@@ -40,8 +40,8 @@ drop table if exists task_trigger;
 -- Create the task_trigger table
 create table if not exists task_trigger
 (
-  id   timestamp primary key,
-  type text check (type in ('dependency', 'event', 'mix')),
+  id   integer primary key,
+  type integer,
   info json
 );
 
@@ -54,8 +54,8 @@ drop table if exists task_after_effect;
 -- Create the task_after_effect table
 create table if not exists task_after_effect
 (
-  id   timestamp primary key,
-  type text check (type = 'periodic'),
+  id   integer primary key,
+  type integer,
   info json
 );
 
@@ -68,7 +68,7 @@ drop table if exists root_task;
 -- Create the root_task table
 create table if not exists root_task
 (
-  id timestamp primary key
+  id integer primary key
 );
 
 -- Drop the existing suspended_task table if it exists
@@ -77,8 +77,8 @@ drop table if exists suspended_task;
 -- Create the suspended_task table
 create table if not exists suspended_task
 (
-  id   timestamp primary key,
-  type text,
+  id   integer primary key,
+  type integer,
   info json
 );
 
@@ -91,10 +91,10 @@ drop table if exists app_state;
 -- Create the app_state table
 create table if not exists app_state
 (
-  id                integer primary key check (id = 0), -- 使用固定的ID保证只有一个记录
-  root_task         timestamp, -- 根任务的ID
-  now_viewing_task  timestamp, -- 当前查看的任务的ID
-  now_selected_task timestamp  -- 当前选中的任务的ID
+  id                integer primary key check (id = 0),
+  root_task         integer,
+  now_viewing_task  integer,
+  now_selected_task integer
 );
 
 -- Insert the initial singleton record
@@ -107,7 +107,7 @@ drop table if exists task_ui;
 -- Create the task_ui table
 create table if not exists task_ui
 (
-  task_id     timestamp primary key,
+  task_id     integer primary key,
   position_x  integer,
   position_y  integer
 );

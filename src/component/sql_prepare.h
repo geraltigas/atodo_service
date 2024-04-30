@@ -14,4 +14,22 @@ namespace sql_prepare {
     bool sql_finalize();
 }
 
+#define CHECK_ERROR_SELECT(func) \
+    int rc = func;                   \
+    while (rc == SQLITE_BUSY) {       \
+        rc = func;                   \
+    }                                \
+    if (rc != SQLITE_DONE && rc != SQLITE_ROW) { \
+        LOG(ERROR) << "SQL error: " << sqlite3_errmsg(database::g_db); \
+        throw std::runtime_error("SQL error"); \
+    }
+
+#define CHECK_ERROR(func) \
+    int rc = func;                   \
+    if (rc != SQLITE_DONE && rc != SQLITE_ROW) { \
+        LOG(ERROR) << "SQL error: " << sqlite3_errmsg(database::g_db); \
+        throw std::runtime_error("SQL error"); \
+    }
+
+
 #endif //ATODO_SERVICE_SQL_PREPARE_H

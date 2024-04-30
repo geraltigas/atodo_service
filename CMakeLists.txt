@@ -18,6 +18,7 @@ set(LIBS
         sqlite
         # import glog
         glog::glog
+        jsoncpp_static
 )
 
 add_executable(atodo_service main.cpp ${SOURCES})
@@ -25,5 +26,5 @@ target_link_libraries(atodo_service ${LIBS})
 
 # add test
 file(GLOB TEST_SOURCES "test/*.cpp" "test/*/*.cpp")
-add_executable(atodo_service_test ${TEST_SOURCES})
+add_executable(atodo_service_test ${TEST_SOURCES} ${SOURCES})
 target_link_libraries(atodo_service_test ${LIBS} gtest gtest_main)

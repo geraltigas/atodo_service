@@ -46,6 +46,10 @@ int manage_log_dir() {
 }
 
 bool app::_init::glog(int argc, char *argv[]) {
+    // check whether glog is initialized
+    if (google::IsGoogleLoggingInitialized()) {
+        return true;
+    }
     FLAGS_log_dir = LOG_DIR;
     manage_log_dir();
     if (argc == 0) {
@@ -61,7 +65,7 @@ bool app::_init::glog(int argc, char *argv[]) {
 }
 
 bool app::_init::meta_database() {
-    if(meta::create_meta_database()) {
+    if(meta::create_if_not_exist()) {
         LOG(INFO) << "Meta database created";
         return true;
     } else {
@@ -71,8 +75,9 @@ bool app::_init::meta_database() {
 }
 
 bool app::_init::app_database() {
-    database::create_database();
+    database::create_if_not_exist();
     sql_prepare::set_db(database::get_sqlite_db());
+    sql_prepare::sql_finalize();
     if (sql_prepare::sql_precompile()) {
         LOG(INFO) << "App database initialized";
         return true;
@@ -86,8 +91,5 @@ void app::init(int argc, char *argv[]) {
     _init::glog(argc, argv);
     _init::meta_database();
     _init::app_database();
-
-
-
     LOG(INFO) << "App initialized";
 }
