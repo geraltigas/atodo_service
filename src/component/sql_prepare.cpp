@@ -33,6 +33,12 @@ const char* key_sql_map[][2] = {
         {"get_task_by_id", "select * from task where id = ?;"},
         {"get_tasks_by_root_task", "select * from task where root_task = ?;"},
         {"get_tasks_by_parent_task", "select * from task where parent_task = ?;"},
+        {"add_relation", "insert into task_relation (source, target) values (?,?);"},
+        {"delete_relation", "delete from task_relation where source = ? and target = ?;"},
+        {"remove_all_related_relations", "delete from task_relation where source = ? or target = ?;"},
+        {"clear_all_relations", "delete from task_relation;"},
+        {"get_target_tasks", "select target from task_relation where source = ?;"},
+        {"get_source_tasks", "select source from task_relation where target = ?;"},
 
 };
 

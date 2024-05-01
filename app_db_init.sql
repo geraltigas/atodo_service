@@ -27,9 +27,9 @@ drop table if exists task_relation;
 -- Create the task_relation table
 create table if not exists task_relation
 (
-  id     text primary key,
   source integer, -- the source task id
-  target integer  -- the target task id
+  target integer,  -- the target task id
+  primary key (source, target)
 );
 
 -- Create indices for the task_relation table

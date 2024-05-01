@@ -223,4 +223,3 @@ std::vector<task::task_t> task::get_tasks_by_parent_task(int64_t parent_task) {
     sqlite3_reset(stmt);
     return tasks;
 }
-
