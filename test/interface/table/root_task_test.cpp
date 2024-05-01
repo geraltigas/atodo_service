@@ -2,9 +2,9 @@
 // Created by jb030 on 30/04/2024.
 //
 
-#include <gtest/gtest.h>
-#include <interface/root_task.h>
-#include <app.h>
+#include "gtest/gtest.h"
+#include "interface/table/root_task.h"
+#include "app.h"
 
 TEST(root_task_test, get_all_root_tasks) {
     app::init(0, nullptr);

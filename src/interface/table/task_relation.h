@@ -18,5 +18,4 @@ namespace task_relation {
     std::vector<int64_t> get_source_tasks(int64_t target_task);
 };
 
-
 #endif //ATODO_SERVICE_TASK_RELATION_H

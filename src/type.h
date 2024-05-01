@@ -28,4 +28,6 @@ enum class suspended_task_type : int{
     email = 1
 };
 
+using json = std::string;
+
 #endif //ATODO_SERVICE_TYPE_H

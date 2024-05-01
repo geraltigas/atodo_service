@@ -3,9 +3,9 @@
 //
 
 #include "app_state.h"
-#include <component/sql_prepare.h>
-#include <glog/logging.h>
-#include <interface/database.h>
+#include "component/sql_prepare.h"
+#include "glog/logging.h"
+#include "interface/database.h"
 
 bool app_state::set_root_task(int64_t root_task) {
     sqlite3_stmt *stmt = sql_prepare::get_stmt("set_root_task");

@@ -109,7 +109,8 @@ drop table if exists task_ui;
 -- Create the task_ui table
 create table if not exists task_ui
 (
-  task_id     integer primary key,
+  id     integer primary key,
+  parent_task integer,
   position_x  integer,
   position_y  integer
 );

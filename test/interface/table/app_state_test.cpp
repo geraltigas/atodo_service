@@ -2,9 +2,9 @@
 // Created by jb030 on 30/04/2024.
 //
 
-#include <gtest/gtest.h>
-#include <interface/app_state.h>
-#include <app.h>
+#include "gtest/gtest.h"
+#include "interface/table/app_state.h"
+#include "app.h"
 #include "meta/meta.h"
 #include "interface/database.h"
 

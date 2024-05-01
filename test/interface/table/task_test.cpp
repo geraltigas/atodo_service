@@ -2,10 +2,10 @@
 // Created by jb030 on 01/05/2024.
 //
 
-#include <gtest/gtest.h>
-#include <interface/task.h>
-#include <app.h>
-#include <glog/logging.h>
+#include "gtest/gtest.h"
+#include "interface/table/task.h"
+#include "app.h"
+#include "glog/logging.h"
 
 TEST(task_test, add_task) {
     app::init(0, nullptr);

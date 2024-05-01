@@ -39,7 +39,17 @@ const char* key_sql_map[][2] = {
         {"clear_all_relations", "delete from task_relation;"},
         {"get_target_tasks", "select target from task_relation where source = ?;"},
         {"get_source_tasks", "select source from task_relation where target = ?;"},
-
+        {"add_or_update_task_ui", "insert or replace into task_ui (id, parent_task, position_x, position_y) values (?,?,?,?);"},
+        {"get_task_ui_by_parent_task", "select * from task_ui where parent_task = ?;"},
+        {"get_task_ui_by_id", "select * from task_ui where id = ?;"},
+        {"delete_task_ui", "delete from task_ui where id = ?;"},
+        {"clear_all_task_ui", "delete from task_ui;"},
+        {"add_suspended_task", "insert into suspended_task (id, type, info) values (?,?,?);"},
+        {"delete_suspended_task", "delete from suspended_task where id = ?;"},
+        {"get_suspended_task", "select * from suspended_task where id = ?;"},
+        {"get_suspended_task_by_type", "select * from suspended_task where type = ?;"},
+        {"get_all_suspended_tasks", "select * from suspended_task;"},
+        {"clear_all_suspended_tasks", "delete from suspended_task;"},
 };
 
 std::map<std::string, sqlite3_stmt *> sql_stmt_map;
@@ -47,7 +57,7 @@ std::map<std::string, sqlite3_stmt *> sql_stmt_map;
 bool sql_prepare::set_db(sqlite3 *db) {
     if (db == nullptr) {
         LOG(ERROR) << "db is nullptr";
-        throw std::runtime_error("db is nullptr");
+        return false;
     }
     _db = db;
     return true;
@@ -63,7 +73,7 @@ bool sql_prepare::sql_precompile() {
         int rc = sqlite3_prepare_v2(_db, i[1], -1, &stmt, nullptr);
         if (rc != SQLITE_OK) {
             LOG(ERROR) << "sqlite3_prepare_v2 failed: " << sqlite3_errmsg(_db) << " " << i[1];
-            throw std::runtime_error("sqlite3_prepare_v2 failed");
+            return false;
         }
         sql_stmt_map[i[0]] = stmt;
     }
@@ -74,11 +84,11 @@ sqlite3_stmt *sql_prepare::get_stmt(const char *key) {
     if (sql_stmt_map.find(key) != sql_stmt_map.end()) {
         return sql_stmt_map[key];
     }
-    LOG(ERROR) << "key not found";
+    LOG(ERROR) << "key not found: " << key;
     if (sql_stmt_map.empty()) {
         LOG(ERROR) << "sql_stmt_map is empty, run app init first";
     }
-    throw std::runtime_error("sql map key not found");
+    return nullptr;
 }
 
 bool sql_prepare::sql_finalize() {
@@ -86,7 +96,7 @@ bool sql_prepare::sql_finalize() {
         int rc = sqlite3_finalize(i.second);
         if (rc != SQLITE_OK) {
             LOG(ERROR) << "sqlite3_finalize failed: " << sqlite3_errmsg(_db);
-            throw std::runtime_error("sqlite3_finalize failed");
+            return false;
         }
     }
     sql_stmt_map.clear();

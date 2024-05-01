@@ -2,9 +2,9 @@
 // Created by jb030 on 01/05/2024.
 //
 
-#include <gtest/gtest.h>
-#include <interface/task_relation.h>
-#include <app.h>
+#include "gtest/gtest.h"
+#include "interface/table/task_relation.h"
+#include "app.h"
 
 TEST(task_relation_test, add_realtion) {
     app::init(0, nullptr);

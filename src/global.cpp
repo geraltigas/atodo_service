@@ -117,7 +117,8 @@ const char * global::app_db_init_sql = "-- Drop the existing tasks table if it e
                                        "-- Create the task_ui table\n"
                                        "create table if not exists task_ui\n"
                                        "(\n"
-                                       "  task_id     integer primary key,\n"
+                                       "  id     integer primary key,\n"
+                                       "  parent_task integer,\n"
                                        "  position_x  integer,\n"
                                        "  position_y  integer\n"
                                        ");";
