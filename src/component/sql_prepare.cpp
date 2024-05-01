@@ -20,8 +20,19 @@ const char* key_sql_map[][2] = {
         {"get_all_root_tasks", "select id from root_task;"},
         {"insert_root_task", "insert into root_task (id) values (?);"},
         {"delete_root_task", "delete from root_task where id = ?;"},
-        {"insert_task", "insert into task (root_task, name, goal, dealine, in_work_time, status, parent_task) values (?,?,?,?,?,?,?);"},
-
+        {"insert_task", "insert into task (root_task, name, goal, deadline, in_work_time, status, parent_task) values (?,?,?,?,?,?,?);"},
+        {"delete_task", "delete from task where id = ?;"},
+        {"clear_all_tasks", "delete from task where id != 0;"},
+        {"update_task_name", "update task set name = ? where id = ?;"},
+        {"update_task_goal", "update task set goal = ? where id = ?;"},
+        {"update_task_deadline", "update task set deadline = ? where id = ?;"},
+        {"update_task_in_work_time", "update task set in_work_time = ? where id = ?;"},
+        {"update_task_status", "update task set status = ? where id = ?;"},
+        {"update_task_parent_task", "update task set parent_task = ? where id = ?;"},
+        {"get_all_tasks", "select * from task;"},
+        {"get_task_by_id", "select * from task where id = ?;"},
+        {"get_tasks_by_root_task", "select * from task where root_task = ?;"},
+        {"get_tasks_by_parent_task", "select * from task where parent_task = ?;"},
 
 };
 

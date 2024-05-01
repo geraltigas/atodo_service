@@ -5,7 +5,7 @@
 #ifndef ATODO_SERVICE_TYPE_H
 #define ATODO_SERVICE_TYPE_H
 
-enum class task_status {
+enum class task_status : int {
     todo = 0,
     in_progress = 1,
     paused = 2,
@@ -13,17 +13,17 @@ enum class task_status {
     done = 4
 };
 
-enum class task_trigger_type {
+enum class task_trigger_type : int{
     dependency = 0,
     event = 1,
     mix = 2
 };
 
-enum class task_after_effect_type {
+enum class task_after_effect_type : int{
     periodic = 0
 };
 
-enum class suspended_task_type {
+enum class suspended_task_type : int{
     time = 0,
     email = 1
 };

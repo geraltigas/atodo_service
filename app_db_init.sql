@@ -18,6 +18,8 @@ create table if not exists task
 create index if not exists task_id_idx on task (id);
 create index if not exists task_root_task_idx on task (root_task);
 -- create index if not exists tasks_name_idx on tasks (name);
+insert into task (id, root_task, name, goal, deadline, in_work_time, status, parent_task)
+values (0, -1, 'Overall', 'Good Game', 4102405199, 0, 0, -1);
 
 -- Drop the existing task_relation table if it exists
 drop table if exists task_relation;

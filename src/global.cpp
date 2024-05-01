@@ -26,6 +26,8 @@ const char * global::app_db_init_sql = "-- Drop the existing tasks table if it e
                                        "create index if not exists task_id_idx on task (id);\n"
                                        "create index if not exists task_root_task_idx on task (root_task);\n"
                                        "-- create index if not exists tasks_name_idx on tasks (name);\n"
+                                       "insert into task (id, root_task, name, goal, deadline, in_work_time, status, parent_task)\n"
+                                       "values (0, -1, 'Overall', 'Good Game', 4102405199, 0, 0, -1);\n"
                                        "\n"
                                        "-- Drop the existing task_relation table if it exists\n"
                                        "drop table if exists task_relation;\n"
