@@ -15,8 +15,7 @@ enum class task_status : int {
 
 enum class task_trigger_type : int{
     dependency = 0,
-    event = 1,
-    mix = 2
+    event = 1
 };
 
 enum class task_after_effect_type : int{

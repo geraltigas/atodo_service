@@ -42,13 +42,15 @@ drop table if exists task_trigger;
 -- Create the task_trigger table
 create table if not exists task_trigger
 (
-  id   integer primary key,
+  id   integer,
   type integer,
-  info json
+  info json,
+  primary key (id, type)
 );
 
 -- Create an index for the task_trigger table on the type column
 create index if not exists task_trigger_type_idx on task_trigger (type);
+create index if not exists task_trigger_id_idx on task_trigger (id);
 
 -- Drop the existing task_after_effect table if it exists
 drop table if exists task_after_effect;
@@ -56,13 +58,15 @@ drop table if exists task_after_effect;
 -- Create the task_after_effect table
 create table if not exists task_after_effect
 (
-  id   integer primary key,
+  id   integer,
   type integer,
-  info json
+  info json,
+  primary key (id, type)
 );
 
 -- Create an index for the task_after_effect table on the type column
 create index if not exists task_after_effect_type_idx on task_after_effect (type);
+create index if not exists task_after_effect_id_idx on task_after_effect (id);
 
 -- Drop the existing root_task table if it exists
 drop table if exists root_task;

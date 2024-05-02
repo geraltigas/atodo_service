@@ -50,6 +50,22 @@ const char* key_sql_map[][2] = {
         {"get_suspended_task_by_type", "select * from suspended_task where type = ?;"},
         {"get_all_suspended_tasks", "select * from suspended_task;"},
         {"clear_all_suspended_tasks", "delete from suspended_task;"},
+        {"add_or_update_task_trigger", "insert or replace into task_trigger (id, type, info) values (?,?,?);"},
+        {"delete_task_triggers_by_id", "delete from task_trigger where id = ?;"},
+        {"delete_task_trigger", "delete from task_trigger where id = ? and type = ?;"},
+        {"get_task_trigger", "select * from task_trigger where id = ? and type = ?;"},
+        {"get_task_triggers_by_id", "select * from task_trigger where id = ?;"},
+        {"get_task_triggers_by_type", "select * from task_trigger where type = ?;"},
+        {"get_all_task_triggers", "select * from task_trigger;"},
+        {"clear_all_task_triggers", "delete from task_trigger;"},
+        {"add_or_update_after_effect", "insert or replace into task_after_effect (id, type, info) values (?,?,?);"},
+        {"delete_after_effect", "delete from task_after_effect where id = ? and type = ?;"},
+        {"delete_after_effect_by_id", "delete from task_after_effect where id = ?;"},
+        {"get_after_effect", "select * from task_after_effect where id = ? and type = ?;"},
+        {"get_after_effects_by_id", "select * from task_after_effect where id = ?;"},
+        {"get_after_effects_by_type", "select * from task_after_effect where type = ?;"},
+        {"get_all_after_effects", "select * from task_after_effect;"},
+        {"delete_all_after_effects", "delete from task_after_effect;"},
 };
 
 std::map<std::string, sqlite3_stmt *> sql_stmt_map;
