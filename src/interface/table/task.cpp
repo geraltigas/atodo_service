@@ -20,11 +20,11 @@ int64_t task::add_task(task::task_t task) {
     int rc = sqlite3_step(stmt);
     // return the id of the task
     if (rc != SQLITE_DONE) {
-        LOG(ERROR) << "sqlite3_step failed: " << sqlite3_errmsg(database::get_sqlite_db()) << " " << "insert_task";
+        LOG(ERROR) << "sqlite3_step failed: " << sqlite3_errmsg((sqlite3 *)database::get_sqlite_db()) << " " << "insert_task";
         sqlite3_reset(stmt);
         return -1;
     }
-    int64_t task_id = sqlite3_last_insert_rowid(database::get_sqlite_db());
+    int64_t task_id = sqlite3_last_insert_rowid((sqlite3 *)database::get_sqlite_db());
     sqlite3_reset(stmt);
     return task_id;
 }
@@ -35,7 +35,7 @@ bool task::delete_task(int64_t task_id) {
 
     int rc = sqlite3_step(stmt);
     if (rc != SQLITE_DONE) {
-        LOG(ERROR) << "sqlite3_step failed: " << sqlite3_errmsg(database::get_sqlite_db()) << " " << "delete_task";
+        LOG(ERROR) << "sqlite3_step failed: " << sqlite3_errmsg((sqlite3 *)database::get_sqlite_db()) << " " << "delete_task";
         sqlite3_reset(stmt);
         return false;
     }
@@ -48,7 +48,7 @@ bool task::clear_all_tasks() {
 
     int rc = sqlite3_step(stmt);
     if (rc != SQLITE_DONE) {
-        LOG(ERROR) << "sqlite3_step failed: " << sqlite3_errmsg(database::get_sqlite_db()) << " " << "clear_all_tasks";
+        LOG(ERROR) << "sqlite3_step failed: " << sqlite3_errmsg((sqlite3 *)database::get_sqlite_db()) << " " << "clear_all_tasks";
         sqlite3_reset(stmt);
         return false;
     }
@@ -64,7 +64,7 @@ bool task::update_task_name(int64_t task_id, std::string name) {
 
     int rc = sqlite3_step(stmt);
     if (rc != SQLITE_DONE) {
-        LOG(ERROR) << "sqlite3_step failed: " << sqlite3_errmsg(database::get_sqlite_db()) << " " << "update_task_name";
+        LOG(ERROR) << "sqlite3_step failed: " << sqlite3_errmsg((sqlite3 *)database::get_sqlite_db()) << " " << "update_task_name";
         sqlite3_reset(stmt);
         return false;
     }
@@ -79,7 +79,7 @@ bool task::update_task_goal(int64_t task_id, std::string goal) {
 
     int rc = sqlite3_step(stmt);
     if (rc != SQLITE_DONE) {
-        LOG(ERROR) << "sqlite3_step failed: " << sqlite3_errmsg(database::get_sqlite_db()) << " " << "update_task_goal";
+        LOG(ERROR) << "sqlite3_step failed: " << sqlite3_errmsg((sqlite3 *)database::get_sqlite_db()) << " " << "update_task_goal";
         sqlite3_reset(stmt);
         return false;
     }
@@ -94,7 +94,7 @@ bool task::update_task_deadline(int64_t task_id, int64_t deadline) {
 
     int rc = sqlite3_step(stmt);
     if (rc != SQLITE_DONE) {
-        LOG(ERROR) << "sqlite3_step failed: " << sqlite3_errmsg(database::get_sqlite_db()) << " " << "update_task_deadline";
+        LOG(ERROR) << "sqlite3_step failed: " << sqlite3_errmsg((sqlite3 *)database::get_sqlite_db()) << " " << "update_task_deadline";
         sqlite3_reset(stmt);
         return false;
     }
@@ -109,7 +109,7 @@ bool task::update_task_in_work_time(int64_t task_id, bool in_work_time) {
 
     int rc = sqlite3_step(stmt);
     if (rc != SQLITE_DONE) {
-        LOG(ERROR) << "sqlite3_step failed: " << sqlite3_errmsg(database::get_sqlite_db()) << " " << "update_task_in_work_time";
+        LOG(ERROR) << "sqlite3_step failed: " << sqlite3_errmsg((sqlite3 *)database::get_sqlite_db()) << " " << "update_task_in_work_time";
         sqlite3_reset(stmt);
         return false;
     }
@@ -124,7 +124,7 @@ bool task::update_task_status(int64_t task_id, task_status status) {
 
     int rc = sqlite3_step(stmt);
     if (rc != SQLITE_DONE) {
-        LOG(ERROR) << "sqlite3_step failed: " << sqlite3_errmsg(database::get_sqlite_db()) << " " << "update_task_status";
+        LOG(ERROR) << "sqlite3_step failed: " << sqlite3_errmsg((sqlite3 *)database::get_sqlite_db()) << " " << "update_task_status";
         sqlite3_reset(stmt);
         return false;
     }
@@ -139,7 +139,7 @@ bool task::update_task_parent_task(int64_t task_id, int64_t parent_task) {
 
     int rc = sqlite3_step(stmt);
     if (rc != SQLITE_DONE) {
-        LOG(ERROR) << "sqlite3_step failed: " << sqlite3_errmsg(database::get_sqlite_db()) << " " << "update_task_parent_task";
+        LOG(ERROR) << "sqlite3_step failed: " << sqlite3_errmsg((sqlite3 *)database::get_sqlite_db()) << " " << "update_task_parent_task";
         sqlite3_reset(stmt);
         return false;
     }

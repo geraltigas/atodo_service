@@ -9,7 +9,7 @@
 #include <global.h>
 #include <glog/logging.h>
 
-sqlite3 *database::g_db = nullptr;
+void *database::g_db = nullptr;
 
 bool database::check_database_existence() {
     meta::create_if_not_exist();
@@ -65,7 +65,7 @@ bool database::create_database() {
 bool database::delete_database() {
     // release the database
     if (g_db != nullptr) {
-        sqlite3_close(g_db);
+        sqlite3_close((sqlite3 *)g_db);
         g_db = nullptr;
     }
     meta::create_if_not_exist();
@@ -77,12 +77,12 @@ bool database::delete_database() {
     return true;
 }
 
-sqlite3 *database::get_sqlite_db() {
+void *database::get_sqlite_db() {
     if (g_db != nullptr) {
         return g_db;
     }
     if (check_database_existence()) {
-        int rc = sqlite3_open(get_database_file_path().c_str(), &g_db);
+        int rc = sqlite3_open(get_database_file_path().c_str(), (sqlite3 **)&g_db);
         if (rc) {
             return nullptr;
         } else {

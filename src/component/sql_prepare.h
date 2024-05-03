@@ -20,14 +20,14 @@ namespace sql_prepare {
         rc = func;                   \
     }                                \
     if (rc != SQLITE_DONE && rc != SQLITE_ROW) { \
-        LOG(ERROR) << "SQL error: " << sqlite3_errmsg(database::g_db); \
+        LOG(ERROR) << "SQL error: " << sqlite3_errmsg((sqlite3 *)database::g_db); \
         throw std::runtime_error("SQL error"); \
     }
 
 #define CHECK_ERROR(func) \
     int rc = func;                   \
     if (rc != SQLITE_DONE && rc != SQLITE_ROW) { \
-        LOG(ERROR) << "SQL error: " << sqlite3_errmsg(database::g_db); \
+        LOG(ERROR) << "SQL error: " << sqlite3_errmsg((sqlite3 *)database::g_db); \
         throw std::runtime_error("SQL error"); \
     }
 

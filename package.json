@@ -1,0 +1,27 @@
+{
+  "name": "atodo_service",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "install": "cmake-js compile"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cmake-js": "^7.3.0"
+  },
+  "binary": {
+    "napi_versions": [
+      7
+    ]
+  },
+  "devDependencies": {
+    "node-addon-api": "^8.0.0"
+  }
+}

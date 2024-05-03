@@ -1,8 +1,8 @@
 //
-// Created by jb030 on 28/04/2024.
+// Created by jb030 on 03/05/2024.
 //
 
-#include "app.h"
+#include "service.h"
 #include <glog/logging.h>
 #include <filesystem>
 #include "constant.h"
@@ -10,7 +10,7 @@
 #include "interface/database.h"
 #include "component/sql_prepare.h"
 
-void SignalHandle(const char *data, size_t size) {
+void ServiceSignalHandle(const char *data, size_t size) {
     std::string str = std::string(data, size);
     LOG(ERROR) << str;
     if (str.find("Check failed") != std::string::npos) {
@@ -18,7 +18,7 @@ void SignalHandle(const char *data, size_t size) {
     }
 }
 
-int manage_log_dir() {
+int service_manage_log_dir() {
     // check log dir use stdlib
     if (!std::filesystem::exists(LOG_DIR)) {
         std::filesystem::create_directory(LOG_DIR);
@@ -45,26 +45,26 @@ int manage_log_dir() {
     return 0;
 }
 
-bool app::_init::glog(int argc, char *argv[]) {
+bool service::_init::glog(int argc, char *argv[]) {
     // check whether glog is initialized
     if (google::IsGoogleLoggingInitialized()) {
         return true;
     }
     FLAGS_log_dir = LOG_DIR;
-    manage_log_dir();
+    service_manage_log_dir();
     if (argc == 0) {
         google::InitGoogleLogging("app");
     } else {
         google::InitGoogleLogging(argv[0]);
     }
     google::InstallFailureSignalHandler();
-    google::InstallFailureWriter(&SignalHandle);
+    google::InstallFailureWriter(&ServiceSignalHandle);
     // set log level
     FLAGS_stderrthreshold = google::GLOG_INFO;
     return true;
 }
 
-bool app::_init::meta_database() {
+bool service::_init::meta_database() {
     if(meta::create_if_not_exist()) {
         LOG(INFO) << "Meta database created";
         return true;
@@ -74,7 +74,7 @@ bool app::_init::meta_database() {
     }
 }
 
-bool app::_init::app_database() {
+bool service::_init::app_database() {
     database::create_if_not_exist();
     sql_prepare::set_db((sqlite3 *)database::get_sqlite_db());
     sql_prepare::sql_finalize();
@@ -87,14 +87,9 @@ bool app::_init::app_database() {
     }
 }
 
-void app::init(int argc, char *argv[]) {
+void service::init(int argc, char *argv[]) {
     _init::glog(argc, argv);
     _init::meta_database();
     _init::app_database();
     LOG(INFO) << "App initialized";
 }
-
-//void app::run() {
-//    service::init_service(GRPC_URL);
-//    service::run_service();
-//}

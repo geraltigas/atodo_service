@@ -5,6 +5,7 @@
 #include "task_after_effect.h"
 #include <component/sql_prepare.h>
 #include <string>
+#include <json/json.h>
 
 task_after_effect::periodic_t::periodic_t(int64_t now_at, std::vector<int64_t> intervals) : now_at(now_at), period(intervals.size()), intervals(std::move(intervals)) {}
 

@@ -18,7 +18,7 @@ bool task_relation::add_relation(int64_t source_task, int64_t target_task) {
 
     int rc = sqlite3_step(stmt);
     if (rc != SQLITE_DONE) {
-        LOG(ERROR) << "sqlite3_step failed: " << sqlite3_errmsg(database::get_sqlite_db());
+        LOG(ERROR) << "sqlite3_step failed: " << sqlite3_errmsg((sqlite3 *)database::get_sqlite_db());
         sqlite3_reset(stmt);
         return false;
     }
@@ -33,7 +33,7 @@ bool task_relation::delete_relation(int64_t source_task, int64_t target_task) {
 
     int rc = sqlite3_step(stmt);
     if (rc != SQLITE_DONE) {
-        LOG(ERROR) << "sqlite3_step failed: " << sqlite3_errmsg(database::get_sqlite_db());
+        LOG(ERROR) << "sqlite3_step failed: " << sqlite3_errmsg((sqlite3 *)database::get_sqlite_db());
         sqlite3_reset(stmt);
         return false;
     }
@@ -47,7 +47,7 @@ bool task_relation::remove_all_related_relations(int64_t task_id) {
     sqlite3_bind_int64(stmt, 2, task_id);
     int rc = sqlite3_step(stmt);
     if (rc != SQLITE_DONE) {
-        LOG(ERROR) << "sqlite3_step failed: " << sqlite3_errmsg(database::get_sqlite_db());
+        LOG(ERROR) << "sqlite3_step failed: " << sqlite3_errmsg((sqlite3 *)database::get_sqlite_db());
         sqlite3_reset(stmt);
         return false;
     }
@@ -59,7 +59,7 @@ bool task_relation::clear_all_relations() {
     sqlite3_stmt *stmt = sql_prepare::get_stmt("clear_all_relations");
     int rc = sqlite3_step(stmt);
     if (rc != SQLITE_DONE) {
-        LOG(ERROR) << "sqlite3_step failed: " << sqlite3_errmsg(database::get_sqlite_db());
+        LOG(ERROR) << "sqlite3_step failed: " << sqlite3_errmsg((sqlite3 *)database::get_sqlite_db());
         sqlite3_reset(stmt);
         return false;
     }
@@ -76,7 +76,7 @@ std::vector<int64_t> task_relation::get_target_tasks(int64_t source_task) {
         target_tasks.push_back(sqlite3_column_int64(stmt, 0));
     }
     if (rc != SQLITE_DONE) {
-        LOG(ERROR) << "sqlite3_step failed: " << sqlite3_errmsg(database::get_sqlite_db());
+        LOG(ERROR) << "sqlite3_step failed: " << sqlite3_errmsg((sqlite3 *)database::get_sqlite_db());
         throw std::runtime_error("sqlite3_step failed");
     }
     sqlite3_reset(stmt);
@@ -92,7 +92,7 @@ std::vector<int64_t> task_relation::get_source_tasks(int64_t target_task) {
         source_tasks.push_back(sqlite3_column_int64(stmt, 0));
     }
     if (rc != SQLITE_DONE) {
-        LOG(ERROR) << "sqlite3_step failed: " << sqlite3_errmsg(database::get_sqlite_db());
+        LOG(ERROR) << "sqlite3_step failed: " << sqlite3_errmsg((sqlite3 *)database::get_sqlite_db());
         throw std::runtime_error("sqlite3_step failed");
     }
     sqlite3_reset(stmt);

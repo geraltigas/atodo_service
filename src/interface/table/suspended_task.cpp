@@ -4,6 +4,8 @@
 
 #include "suspended_task.h"
 #include <component/sql_prepare.h>
+#include <json/json.h>
+#include <glog/logging.h>
 
 bool suspended_task::add_suspended_task(suspended_task::suspended_task_t suspended_task) {
     sqlite3_stmt *stmt = sql_prepare::get_stmt("add_suspended_task");

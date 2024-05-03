@@ -5,11 +5,10 @@
 #ifndef ATODO_SERVICE_TASK_AFTER_EFFECT_H
 #define ATODO_SERVICE_TASK_AFTER_EFFECT_H
 
-#include <cstdint>
-#include <component/sql_prepare.h>
-#include <vector>
-#include <json/json.h>
+#include <string>
 #include <type.h>
+#include <cstdint>
+#include <vector>
 
 namespace task_after_effect {
     struct periodic_t {
