@@ -9,6 +9,7 @@
 #include "meta/meta.h"
 #include "interface/database.h"
 #include "component/sql_prepare.h"
+#include "grpc_service/service.h"
 
 void SignalHandle(const char *data, size_t size) {
     std::string str = std::string(data, size);
@@ -92,4 +93,9 @@ void app::init(int argc, char *argv[]) {
     _init::meta_database();
     _init::app_database();
     LOG(INFO) << "App initialized";
+}
+
+void app::run() {
+    service::init_service(GRPC_URL);
+    service::run_service();
 }

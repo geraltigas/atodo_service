@@ -27,14 +27,14 @@ bool meta::create_meta_database() {
         sql.pop_back();
         sql += ");";
         char *zErrMsg = nullptr;
-        rc = sqlite3_exec(db, sql.c_str(), nullptr, 0, &zErrMsg);
+        rc = sqlite3_exec(db, sql.c_str(), nullptr, nullptr, &zErrMsg);
         if (rc != SQLITE_OK) {
             LOG(ERROR) << "SQL error: " << zErrMsg;
             return false;
         }
         sql = "insert into meta (id, app_database_file_path) values (0, './app.db');";
         zErrMsg = nullptr;
-        rc = sqlite3_exec(db, sql.c_str(), nullptr, 0, &zErrMsg);
+        rc = sqlite3_exec(db, sql.c_str(), nullptr, nullptr, &zErrMsg);
         if (rc != SQLITE_OK) {
             LOG(ERROR) << "SQL error: " << zErrMsg;
             return false;
@@ -47,7 +47,7 @@ std::string meta::get_app_database_file_path() {
     sqlite3 * db;
     int rc = sqlite3_open(meta_database_file_path.c_str(), &db);
     if (rc) {
-        return std::string();
+        return {};
     }
     std::string sql = "select app_database_file_path from meta where id = 0;";
     char *zErrMsg = nullptr;
@@ -56,7 +56,7 @@ std::string meta::get_app_database_file_path() {
     rc = sqlite3_get_table(db, sql.c_str(), &result, &row, &column, &zErrMsg);
     if (rc != SQLITE_OK) {
         LOG(ERROR) << "SQL error: " << zErrMsg;
-        return std::string();
+        return {};
     }
     std::string app_database_file_path = result[1];
     sqlite3_free_table(result);
@@ -64,7 +64,7 @@ std::string meta::get_app_database_file_path() {
     return app_database_file_path;
 }
 
-bool meta::set_app_database_file_path(std::string file_path) {
+bool meta::set_app_database_file_path(const std::string& file_path) {
     sqlite3 * db;
     int rc = sqlite3_open(meta_database_file_path.c_str(), &db);
     if (rc) {
@@ -72,7 +72,7 @@ bool meta::set_app_database_file_path(std::string file_path) {
     }
     std::string sql = "update meta set app_database_file_path = '" + file_path + "' where id = 0;";
     char *zErrMsg = nullptr;
-    rc = sqlite3_exec(db, sql.c_str(), nullptr, 0, &zErrMsg);
+    rc = sqlite3_exec(db, sql.c_str(), nullptr, nullptr, &zErrMsg);
     if (rc != SQLITE_OK) {
         LOG(ERROR) << "SQL error: " << zErrMsg;
         return false;

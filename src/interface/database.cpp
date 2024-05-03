@@ -21,9 +21,8 @@ std::string database::get_database_file_path() {
     return meta::get_app_database_file_path();
 }
 
-void database::set_database_file_path(std::string file_path) {
-    meta::create_if_not_exist();
-    meta::set_app_database_file_path(file_path);
+bool database::set_database_file_path(std::string file_path) {
+    return meta::create_if_not_exist() && meta::set_app_database_file_path(file_path);
 }
 
 bool initialize_database(sqlite3 *db) {

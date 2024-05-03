@@ -1,19 +1,23 @@
 include(FetchContent)
 
-# grpc
-set(ABSL_PROPAGATE_CXX_STD ON)
-# PREFIX
-set(CMAKE_INSTALL_PREFIX ${CMAKE_BINARY_DIR}/install)
-set(ABSL_ENABLE_INSTALL ON)
-FetchContent_Declare(
-        absl
-        GIT_REPOSITORY https://github.com/abseil/abseil-cpp.git
-        GIT_TAG        20240116.2
-        GIT_SHALLOW TRUE
-        OVERRIDE_FIND_PACKAGE
-)
-FetchContent_MakeAvailable(absl)
+## grpc
+#set(ABSL_PROPAGATE_CXX_STD ON)
+## PREFIX
+#set(protobuf_INSTALL OFF)
+#set(utf8_range_ENABLE_INSTALL OFF)
+#set(CMAKE_INSTALL_PREFIX ${CMAKE_BINARY_DIR}/install)
+#set(ABSL_ENABLE_INSTALL ON)
+#FetchContent_Declare(
+#        absl
+#        GIT_REPOSITORY https://github.com/abseil/abseil-cpp.git
+#        GIT_TAG        20240116.2
+#        GIT_SHALLOW TRUE
+#        OVERRIDE_FIND_PACKAGE
+#)
+#FetchContent_MakeAvailable(absl)
 
+set(POROTOBUF_ENABLE_INSTALL ON)
+set(ABSL_ENABLE_INSTALL ON)
 FetchContent_Declare(
         gRPC
         GIT_REPOSITORY https://github.com/grpc/grpc

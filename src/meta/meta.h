@@ -15,7 +15,7 @@ namespace meta {
     bool create_if_not_exist();
     bool delete_meta_database();
     std::string get_app_database_file_path();
-    bool set_app_database_file_path(std::string file_path);
+    bool set_app_database_file_path(const std::string& file_path);
 }
 
 #endif //ATODO_SERVICE_META_H

@@ -4,3 +4,4 @@
 
 #define LOG_DIR "./log"
 #define LOG_FILE_MAX_NUM 10
+#define GRPC_URL "localhost:50051"

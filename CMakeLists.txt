@@ -9,12 +9,12 @@ add_subdirectory(lib)
 set(CMAKE_CXX_STANDARD 17)
 
 # find all source file in src and its subdirectory
-file(GLOB_RECURSE SOURCES "src/*.cpp")
+file(GLOB_RECURSE SOURCES "src/*.cpp" "src/*.cc")
 include_directories("src")
 
 # create a var to hold all lib
 set(LIBS
-        grpc++
+        grpc++_alts
         sqlite
         # import glog
         glog::glog
