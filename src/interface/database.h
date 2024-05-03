@@ -11,7 +11,7 @@
 namespace database {
     bool check_database_existence();
     std::string get_database_file_path();
-    bool set_database_file_path(std::string file_path);
+    bool set_database_file_path(const std::string& file_path);
     bool create_database();
     bool create_if_not_exist();
     bool delete_database();

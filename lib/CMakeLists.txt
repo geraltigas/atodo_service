@@ -27,8 +27,31 @@ include(FetchContent)
 #set(FETCHCONTENT_QUIET OFF)
 #FetchContent_MakeAvailable(gRPC)
 
+## asio
+#FetchContent_Declare(
+#        asio
+#        GIT_REPOSITORY https://github.com/chriskohlhoff/asio.git
+#        GIT_TAG        asio-1-30-2
+#        GIT_SHALLOW TRUE
+#)
+#FetchContent_MakeAvailable(asio)
+
+## crow
+#FetchContent_Declare(
+#        crow
+#        GIT_REPOSITORY https://github.com/CrowCpp/Crow.git
+#        GIT_TAG        v1.1.0
+#        GIT_SHALLOW TRUE
+#)
+#FetchContent_MakeAvailable(crow)
+
+#asio
+add_subdirectory(asio)
+
+# crpw
+add_subdirectory(crow)
+
 # sqlite3
-include_directories(sqlite)
 add_subdirectory(sqlite)
 
 # gtest

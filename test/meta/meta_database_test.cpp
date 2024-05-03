@@ -15,12 +15,12 @@ TEST(meta_database_test, manage_meta_database) {
 TEST(meta_database_test, get_app_database_file_path) {
     EXPECT_TRUE(meta::delete_meta_database());
     EXPECT_TRUE(meta::create_meta_database());
-    EXPECT_EQ(meta::get_app_database_file_path(), "./app.db");
+    EXPECT_EQ(meta::get_now_app_database_file_path(), "./app.db");
 }
 
 TEST(meta_database_test, set_app_database_file_path) {
     EXPECT_TRUE(meta::delete_meta_database());
     EXPECT_TRUE(meta::create_meta_database());
-    EXPECT_TRUE(meta::set_app_database_file_path("./test.db"));
-    EXPECT_EQ(meta::get_app_database_file_path(), "./test.db");
+    EXPECT_TRUE(meta::set_future_app_database_file_path("./test.db"));
+    EXPECT_EQ(meta::get_future_app_database_file_path(), "./test.db");
 }

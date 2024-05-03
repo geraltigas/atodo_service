@@ -8,21 +8,22 @@
 #include <sqlite3.h>
 #include <global.h>
 #include <glog/logging.h>
+#include <component/sql_prepare.h>
 
 sqlite3 *database::g_db = nullptr;
 
 bool database::check_database_existence() {
     meta::create_if_not_exist();
-    return std::filesystem::exists(meta::get_app_database_file_path());
+    return std::filesystem::exists(meta::get_now_app_database_file_path());
 }
 
 std::string database::get_database_file_path() {
     meta::create_if_not_exist();
-    return meta::get_app_database_file_path();
+    return meta::get_now_app_database_file_path();
 }
 
-bool database::set_database_file_path(std::string file_path) {
-    return meta::create_if_not_exist() && meta::set_app_database_file_path(file_path);
+bool database::set_database_file_path(const std::string& file_path) {
+    return meta::create_if_not_exist() && meta::set_future_app_database_file_path(file_path);
 }
 
 bool initialize_database(sqlite3 *db) {
@@ -41,37 +42,52 @@ bool initialize_database(sqlite3 *db) {
 }
 
 bool database::create_database() {
-    meta::create_if_not_exist();
-    std::string file_path = meta::get_app_database_file_path();
-    LOG(INFO) << "Creating database at " << file_path;
-    if (std::filesystem::exists(file_path)) {
-        return true;
-    }else {
+    std::string now_file_path = meta::get_now_app_database_file_path();
+    std::string future_file_path = meta::get_future_app_database_file_path();
+
+    if (std::filesystem::exists(now_file_path)) {
+        if (now_file_path == future_file_path) {
+            return true;
+        } else {
+            if (g_db != nullptr) {
+                sql_prepare::sql_finalize();
+                sqlite3_close(g_db);
+                g_db = nullptr;
+            }
+            std::filesystem::rename(now_file_path, future_file_path);
+            return meta::set_now_app_database_file_path(future_file_path) && get_sqlite_db() && sql_prepare::set_db(g_db) && sql_prepare::sql_precompile();
+        }
+    } else {
         sqlite3 *db;
-        int rc = sqlite3_open(file_path.c_str(), &db);
+        int rc = sqlite3_open(now_file_path.c_str(), &db);
         if (rc) {
             return false;
         } else {
             bool result = initialize_database(db);
             sqlite3_close(db);
-            return result;
+            if (result) {
+                return meta::set_now_app_database_file_path(now_file_path) &&
+                       meta::set_future_app_database_file_path(future_file_path);
+            } else {
+                return false;
+            }
         }
     }
-}
 
-#include <fstream>
+}
 #include <iostream>
 
 bool database::delete_database() {
-    // release the database
-    if (g_db != nullptr) {
-        sqlite3_close(g_db);
-        g_db = nullptr;
-    }
     meta::create_if_not_exist();
-    std::string file_path = meta::get_app_database_file_path();
+    std::string file_path = meta::get_now_app_database_file_path();
     if (!std::filesystem::exists(file_path)) {
         return true;
+    }
+    // release the database
+    if (g_db != nullptr) {
+        sql_prepare::sql_finalize();
+        sqlite3_close(g_db);
+        g_db = nullptr;
     }
     std::filesystem::remove(file_path);
     return true;

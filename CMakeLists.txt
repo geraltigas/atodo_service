@@ -14,11 +14,11 @@ include_directories("src")
 
 # create a var to hold all lib
 set(LIBS
-        grpc++_alts
         sqlite
-        # import glog
         glog::glog
         jsoncpp_static
+        asio
+        crow
 )
 
 add_executable(atodo_service main.cpp ${SOURCES})

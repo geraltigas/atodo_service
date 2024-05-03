@@ -11,7 +11,8 @@
 const std::string meta_database_file_path = "./meta.db";
 std::map<std::string, std::string> meta_kv_name_type = {
         {"id", "integer primary key check ( id = 0 )"},
-        {"app_database_file_path", "text"}
+        {"now_app_database_file_path", "text"},
+        {"future_app_database_file_path", "text"}
 };
 
 bool meta::create_meta_database() {
@@ -32,7 +33,14 @@ bool meta::create_meta_database() {
             LOG(ERROR) << "SQL error: " << zErrMsg;
             return false;
         }
-        sql = "insert into meta (id, app_database_file_path) values (0, './app.db');";
+        sql = "insert into meta (id, now_app_database_file_path) values (0, './app.db');";
+        zErrMsg = nullptr;
+        rc = sqlite3_exec(db, sql.c_str(), nullptr, nullptr, &zErrMsg);
+        if (rc != SQLITE_OK) {
+            LOG(ERROR) << "SQL error: " << zErrMsg;
+            return false;
+        }
+        sql = "update meta set future_app_database_file_path = './app.db' where id = 0;";
         zErrMsg = nullptr;
         rc = sqlite3_exec(db, sql.c_str(), nullptr, nullptr, &zErrMsg);
         if (rc != SQLITE_OK) {
@@ -43,13 +51,13 @@ bool meta::create_meta_database() {
         return true;
 }
 
-std::string meta::get_app_database_file_path() {
+std::string meta::get_now_app_database_file_path() {
     sqlite3 * db;
     int rc = sqlite3_open(meta_database_file_path.c_str(), &db);
     if (rc) {
         return {};
     }
-    std::string sql = "select app_database_file_path from meta where id = 0;";
+    std::string sql = "select now_app_database_file_path from meta where id = 0;";
     char *zErrMsg = nullptr;
     char **result;
     int row, column;
@@ -64,13 +72,52 @@ std::string meta::get_app_database_file_path() {
     return app_database_file_path;
 }
 
-bool meta::set_app_database_file_path(const std::string& file_path) {
+std::string meta::get_future_app_database_file_path() {
+    sqlite3 * db;
+    int rc = sqlite3_open(meta_database_file_path.c_str(), &db);
+    if (rc) {
+        return {};
+    }
+    std::string sql = "select future_app_database_file_path from meta where id = 0;";
+    char *zErrMsg = nullptr;
+    char **result;
+    int row, column;
+    rc = sqlite3_get_table(db, sql.c_str(), &result, &row, &column, &zErrMsg);
+    if (rc != SQLITE_OK) {
+        LOG(ERROR) << "SQL error: " << zErrMsg;
+        return {};
+    }
+    std::string app_database_file_path = result[1];
+    sqlite3_free_table(result);
+    sqlite3_close(db);
+    return app_database_file_path;
+}
+
+
+bool meta::set_future_app_database_file_path(const std::string& file_path) {
     sqlite3 * db;
     int rc = sqlite3_open(meta_database_file_path.c_str(), &db);
     if (rc) {
         return false;
     }
-    std::string sql = "update meta set app_database_file_path = '" + file_path + "' where id = 0;";
+    std::string sql = "update meta set future_app_database_file_path = '" + file_path + "' where id = 0;";
+    char *zErrMsg = nullptr;
+    rc = sqlite3_exec(db, sql.c_str(), nullptr, nullptr, &zErrMsg);
+    if (rc != SQLITE_OK) {
+        LOG(ERROR) << "SQL error: " << zErrMsg;
+        return false;
+    }
+    sqlite3_close(db);
+    return true;
+}
+
+bool meta::set_now_app_database_file_path(const std::string& file_path) {
+    sqlite3 * db;
+    int rc = sqlite3_open(meta_database_file_path.c_str(), &db);
+    if (rc) {
+        return false;
+    }
+    std::string sql = "update meta set now_app_database_file_path = '" + file_path + "' where id = 0;";
     char *zErrMsg = nullptr;
     rc = sqlite3_exec(db, sql.c_str(), nullptr, nullptr, &zErrMsg);
     if (rc != SQLITE_OK) {
@@ -98,5 +145,6 @@ bool meta::create_if_not_exist() {
 bool meta::check_meta_database_existence() {
     return std::filesystem::exists(meta_database_file_path);
 }
+
 
 
