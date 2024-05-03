@@ -3,3 +3,7 @@ cmake-build-release
 .idea
 lib/*/
 src/grpc
+build
+napi
+node_modules
+package-lock.json

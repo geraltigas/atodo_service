@@ -16,16 +16,16 @@ include(FetchContent)
 #)
 #FetchContent_MakeAvailable(absl)
 
-set(POROTOBUF_ENABLE_INSTALL ON)
-set(ABSL_ENABLE_INSTALL ON)
-FetchContent_Declare(
-        gRPC
-        GIT_REPOSITORY https://github.com/grpc/grpc
-        GIT_TAG        v1.63.0  # e.g v1.28.0
-        GIT_SHALLOW TRUE
-)
-set(FETCHCONTENT_QUIET OFF)
-FetchContent_MakeAvailable(gRPC)
+#set(POROTOBUF_ENABLE_INSTALL ON)
+#set(ABSL_ENABLE_INSTALL ON)
+#FetchContent_Declare(
+#        gRPC
+#        GIT_REPOSITORY https://github.com/grpc/grpc
+#        GIT_TAG        v1.63.0  # e.g v1.28.0
+#        GIT_SHALLOW TRUE
+#)
+#set(FETCHCONTENT_QUIET OFF)
+#FetchContent_MakeAvailable(gRPC)
 
 # sqlite3
 include_directories(sqlite)
