@@ -22,40 +22,14 @@ namespace task {
         task_status status;
         int64_t parent_task;
 
-        bool operator==(const task_t &rhs) const {
-            return task_id == rhs.task_id &&
-                   root_task == rhs.root_task &&
-                   name == rhs.name &&
-                   goal == rhs.goal &&
-                   deadline == rhs.deadline &&
-                   in_work_time == rhs.in_work_time &&
-                   status == rhs.status &&
-                   parent_task == rhs.parent_task;
-        }
+        bool operator==(const task_t &rhs) const;
 
-        bool equal_without_id(const task_t &rhs) const {
-            return root_task == rhs.root_task &&
-                   name == rhs.name &&
-                   goal == rhs.goal &&
-                   deadline == rhs.deadline &&
-                   in_work_time == rhs.in_work_time &&
-                   status == rhs.status &&
-                   parent_task == rhs.parent_task;
-        }
+        [[nodiscard]] bool equal_without_id(const task_t &rhs) const;
 
-        std::string to_string() const {
-            return "task_id: " + std::to_string(task_id) + "\n" +
-                   "root_task: " + std::to_string(root_task) + "\n" +
-                   "name: " + name + "\n" +
-                   "goal: " + goal + "\n" +
-                   "deadline: " + std::to_string(deadline) + "\n" +
-                   "in_work_time: " + std::to_string(in_work_time) + "\n" +
-                   "status: " + std::to_string(static_cast<int>(status)) + "\n" +
-                   "parent_task: " + std::to_string(parent_task) + "\n";
-        }
+        [[nodiscard]] std::string to_string() const;
     };
 
-    int64_t add_task(task_t task);
+    int64_t add_task(const task_t& task);
     bool delete_task(int64_t task_id);
     bool clear_all_tasks();
     bool update_task_name(int64_t task_id, std::string name);

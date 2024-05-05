@@ -4,13 +4,14 @@
 
 #include "service.h"
 #include "constant.h"
+#include <http_service/task_show/task_show_service.h>
 #include <crow.h>
 #include <http_service/database_service.h>
 
 crow::SimpleApp app;
 
 bool service::init_service() {
-    return database_service::init_database_service(app);
+    return database_service::init_database_service(app) && task_show_service::init_task_show_service(app);
 }
 
 bool service::run_service(int64_t port) {

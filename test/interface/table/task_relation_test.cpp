@@ -8,12 +8,12 @@
 
 TEST(task_relation_test, add_realtion) {
     app::init(0, nullptr);
-    EXPECT_TRUE(task_relation::add_relation(1, 2));
-    EXPECT_TRUE(task_relation::add_relation(1, 3));
-    EXPECT_TRUE(task_relation::add_relation(1, 4));
-    EXPECT_TRUE(task_relation::add_relation(2, 3));
-    EXPECT_TRUE(task_relation::add_relation(2, 4));
-    EXPECT_TRUE(task_relation::add_relation(3, 4));
+    EXPECT_TRUE(task_relation::add_relation(0, 1, 2));
+    EXPECT_TRUE(task_relation::add_relation(0, 1, 3));
+    EXPECT_TRUE(task_relation::add_relation(0, 1, 4));
+    EXPECT_TRUE(task_relation::add_relation(0, 2, 3));
+    EXPECT_TRUE(task_relation::add_relation(0, 2, 4));
+    EXPECT_TRUE(task_relation::add_relation(0, 3, 4));
 
     std::vector<int64_t> target_tasks = task_relation::get_target_tasks(1);
     EXPECT_EQ(target_tasks.size(), 3);
@@ -48,12 +48,12 @@ TEST(task_relation_test, add_realtion) {
 
 TEST(task_relation_test, delete_relation) {
     app::init(0, nullptr);
-    EXPECT_TRUE(task_relation::add_relation(1, 2));
-    EXPECT_TRUE(task_relation::add_relation(1, 3));
-    EXPECT_TRUE(task_relation::add_relation(1, 4));
-    EXPECT_TRUE(task_relation::add_relation(2, 3));
-    EXPECT_TRUE(task_relation::add_relation(2, 4));
-    EXPECT_TRUE(task_relation::add_relation(3, 4));
+    EXPECT_TRUE(task_relation::add_relation(0, 1, 2));
+    EXPECT_TRUE(task_relation::add_relation(0, 1, 3));
+    EXPECT_TRUE(task_relation::add_relation(0, 1, 4));
+    EXPECT_TRUE(task_relation::add_relation(0, 2, 3));
+    EXPECT_TRUE(task_relation::add_relation(0, 2, 4));
+    EXPECT_TRUE(task_relation::add_relation(0, 3, 4));
 
     std::vector<int64_t> target_tasks = task_relation::get_target_tasks(1);
     EXPECT_EQ(target_tasks.size(), 3);
@@ -73,12 +73,12 @@ TEST(task_relation_test, delete_relation) {
 
 TEST(task_relation_test, remove_all_related_relations) {
     app::init(0, nullptr);
-    EXPECT_TRUE(task_relation::add_relation(1, 2));
-    EXPECT_TRUE(task_relation::add_relation(1, 3));
-    EXPECT_TRUE(task_relation::add_relation(1, 4));
-    EXPECT_TRUE(task_relation::add_relation(2, 3));
-    EXPECT_TRUE(task_relation::add_relation(2, 4));
-    EXPECT_TRUE(task_relation::add_relation(3, 4));
+    EXPECT_TRUE(task_relation::add_relation(0, 1, 2));
+    EXPECT_TRUE(task_relation::add_relation(0, 1, 3));
+    EXPECT_TRUE(task_relation::add_relation(0, 1, 4));
+    EXPECT_TRUE(task_relation::add_relation(0, 2, 3));
+    EXPECT_TRUE(task_relation::add_relation(0, 2, 4));
+    EXPECT_TRUE(task_relation::add_relation(0, 3, 4));
 
     std::vector<int64_t> target_tasks = task_relation::get_target_tasks(1);
     EXPECT_EQ(target_tasks.size(), 3);
@@ -96,12 +96,12 @@ TEST(task_relation_test, remove_all_related_relations) {
 
 TEST(task_relation_test, clear_all_relations) {
     app::init(0, nullptr);
-    EXPECT_TRUE(task_relation::add_relation(1, 2));
-    EXPECT_TRUE(task_relation::add_relation(1, 3));
-    EXPECT_TRUE(task_relation::add_relation(1, 4));
-    EXPECT_TRUE(task_relation::add_relation(2, 3));
-    EXPECT_TRUE(task_relation::add_relation(2, 4));
-    EXPECT_TRUE(task_relation::add_relation(3, 4));
+    EXPECT_TRUE(task_relation::add_relation(0, 1, 2));
+    EXPECT_TRUE(task_relation::add_relation(0, 1, 3));
+    EXPECT_TRUE(task_relation::add_relation(0, 1, 4));
+    EXPECT_TRUE(task_relation::add_relation(0, 2, 3));
+    EXPECT_TRUE(task_relation::add_relation(0, 2, 4));
+    EXPECT_TRUE(task_relation::add_relation(0, 3, 4));
 
     std::vector<int64_t> target_tasks = task_relation::get_target_tasks(1);
     EXPECT_EQ(target_tasks.size(), 3);
@@ -119,12 +119,12 @@ TEST(task_relation_test, clear_all_relations) {
 
 TEST(task_relation_test, get_target_tasks) {
     app::init(0, nullptr);
-    EXPECT_TRUE(task_relation::add_relation(1, 2));
-    EXPECT_TRUE(task_relation::add_relation(1, 3));
-    EXPECT_TRUE(task_relation::add_relation(1, 4));
-    EXPECT_TRUE(task_relation::add_relation(2, 3));
-    EXPECT_TRUE(task_relation::add_relation(2, 4));
-    EXPECT_TRUE(task_relation::add_relation(3, 4));
+    EXPECT_TRUE(task_relation::add_relation(0, 1, 2));
+    EXPECT_TRUE(task_relation::add_relation(0, 1, 3));
+    EXPECT_TRUE(task_relation::add_relation(0, 1, 4));
+    EXPECT_TRUE(task_relation::add_relation(0, 2, 3));
+    EXPECT_TRUE(task_relation::add_relation(0, 2, 4));
+    EXPECT_TRUE(task_relation::add_relation(0, 3, 4));
 
     std::vector<int64_t> target_tasks = task_relation::get_target_tasks(1);
     EXPECT_EQ(target_tasks.size(), 3);
@@ -137,18 +137,33 @@ TEST(task_relation_test, get_target_tasks) {
 
 TEST(task_relation_test, get_source_tasks) {
     app::init(0, nullptr);
-    EXPECT_TRUE(task_relation::add_relation(1, 2));
-    EXPECT_TRUE(task_relation::add_relation(1, 3));
-    EXPECT_TRUE(task_relation::add_relation(1, 4));
-    EXPECT_TRUE(task_relation::add_relation(2, 3));
-    EXPECT_TRUE(task_relation::add_relation(2, 4));
-    EXPECT_TRUE(task_relation::add_relation(3, 4));
+    EXPECT_TRUE(task_relation::add_relation(0, 1, 2));
+    EXPECT_TRUE(task_relation::add_relation(0, 1, 3));
+    EXPECT_TRUE(task_relation::add_relation(0, 1, 4));
+    EXPECT_TRUE(task_relation::add_relation(0, 2, 3));
+    EXPECT_TRUE(task_relation::add_relation(0, 2, 4));
+    EXPECT_TRUE(task_relation::add_relation(0, 3, 4));
 
     std::vector<int64_t> source_tasks = task_relation::get_source_tasks(4);
     EXPECT_EQ(source_tasks.size(), 3);
     EXPECT_EQ(source_tasks[0], 1);
     EXPECT_EQ(source_tasks[1], 2);
     EXPECT_EQ(source_tasks[2], 3);
+
+    task_relation::clear_all_relations();
+}
+
+TEST(task_relation_test, get_relations_by_parent_task) {
+    app::init(0, nullptr);
+    EXPECT_TRUE(task_relation::add_relation(0, 1, 2));
+    EXPECT_TRUE(task_relation::add_relation(0, 1, 3));
+    EXPECT_TRUE(task_relation::add_relation(0, 1, 4));
+    EXPECT_TRUE(task_relation::add_relation(0, 2, 3));
+    EXPECT_TRUE(task_relation::add_relation(0, 2, 4));
+    EXPECT_TRUE(task_relation::add_relation(0, 3, 4));
+
+    std::vector<task_relation::task_relation_t> relations = task_relation::get_relations_by_parent_task(0);
+    EXPECT_EQ(relations.size(), 6);
 
     task_relation::clear_all_relations();
 }

@@ -54,7 +54,9 @@ bool database::create_database() {
                 sqlite3_close(g_db);
                 g_db = nullptr;
             }
-            std::filesystem::rename(now_file_path, future_file_path);
+            if (!std::filesystem::exists(future_file_path)) {
+                std::filesystem::rename(now_file_path, future_file_path);
+            }
             return meta::set_now_app_database_file_path(future_file_path) && get_sqlite_db() && sql_prepare::set_db(g_db) && sql_prepare::sql_precompile();
         }
     } else {

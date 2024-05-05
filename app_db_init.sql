@@ -27,6 +27,7 @@ drop table if exists task_relation;
 -- Create the task_relation table
 create table if not exists task_relation
 (
+  parent_task integer, -- the parent task id
   source integer, -- the source task id
   target integer,  -- the target task id
   primary key (source, target)
@@ -35,6 +36,7 @@ create table if not exists task_relation
 -- Create indices for the task_relation table
 create index if not exists task_relation_source_idx on task_relation (source);
 create index if not exists task_relation_target_idx on task_relation (target);
+create index if not exists task_relation_parent_task_idx on task_relation (parent_task);
 
 -- Drop the existing task_trigger table if it exists
 drop table if exists task_trigger;
@@ -105,7 +107,7 @@ create table if not exists app_state
 
 -- Insert the initial singleton record
 insert into app_state (id, root_task, now_viewing_task, now_selected_task)
-VALUES (0, NULL, NULL, NULL);
+VALUES (0, 0, 0, -1);
 
 -- Drop the existing task_ui table if it exists
 drop table if exists task_ui;

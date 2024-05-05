@@ -6,8 +6,9 @@
 #include "component/sql_prepare.h"
 #include "glog/logging.h"
 #include "interface/database.h"
+#include <interface/table/app_state.h>
 
-int64_t task::add_task(task::task_t task) {
+int64_t task::add_task(const task::task_t &task) {
     sqlite3_stmt *stmt = sql_prepare::get_stmt("insert_task");
     sqlite3_bind_int64(stmt, 1, task.root_task);
     sqlite3_bind_text(stmt, 2, task.name.c_str(), -1, SQLITE_STATIC);
@@ -94,7 +95,8 @@ bool task::update_task_deadline(int64_t task_id, int64_t deadline) {
 
     int rc = sqlite3_step(stmt);
     if (rc != SQLITE_DONE) {
-        LOG(ERROR) << "sqlite3_step failed: " << sqlite3_errmsg(database::get_sqlite_db()) << " " << "update_task_deadline";
+        LOG(ERROR) << "sqlite3_step failed: " << sqlite3_errmsg(database::get_sqlite_db()) << " "
+                   << "update_task_deadline";
         sqlite3_reset(stmt);
         return false;
     }
@@ -109,7 +111,8 @@ bool task::update_task_in_work_time(int64_t task_id, bool in_work_time) {
 
     int rc = sqlite3_step(stmt);
     if (rc != SQLITE_DONE) {
-        LOG(ERROR) << "sqlite3_step failed: " << sqlite3_errmsg(database::get_sqlite_db()) << " " << "update_task_in_work_time";
+        LOG(ERROR) << "sqlite3_step failed: " << sqlite3_errmsg(database::get_sqlite_db()) << " "
+                   << "update_task_in_work_time";
         sqlite3_reset(stmt);
         return false;
     }
@@ -124,7 +127,8 @@ bool task::update_task_status(int64_t task_id, task_status status) {
 
     int rc = sqlite3_step(stmt);
     if (rc != SQLITE_DONE) {
-        LOG(ERROR) << "sqlite3_step failed: " << sqlite3_errmsg(database::get_sqlite_db()) << " " << "update_task_status";
+        LOG(ERROR) << "sqlite3_step failed: " << sqlite3_errmsg(database::get_sqlite_db()) << " "
+                   << "update_task_status";
         sqlite3_reset(stmt);
         return false;
     }
@@ -139,7 +143,8 @@ bool task::update_task_parent_task(int64_t task_id, int64_t parent_task) {
 
     int rc = sqlite3_step(stmt);
     if (rc != SQLITE_DONE) {
-        LOG(ERROR) << "sqlite3_step failed: " << sqlite3_errmsg(database::get_sqlite_db()) << " " << "update_task_parent_task";
+        LOG(ERROR) << "sqlite3_step failed: " << sqlite3_errmsg(database::get_sqlite_db()) << " "
+                   << "update_task_parent_task";
         sqlite3_reset(stmt);
         return false;
     }
@@ -222,4 +227,36 @@ std::vector<task::task_t> task::get_tasks_by_parent_task(int64_t parent_task) {
     }
     sqlite3_reset(stmt);
     return tasks;
+}
+
+bool task::task_t::operator==(const task::task_t &rhs) const {
+    return task_id == rhs.task_id &&
+           root_task == rhs.root_task &&
+           name == rhs.name &&
+           goal == rhs.goal &&
+           deadline == rhs.deadline &&
+           in_work_time == rhs.in_work_time &&
+           status == rhs.status &&
+           parent_task == rhs.parent_task;
+}
+
+bool task::task_t::equal_without_id(const task::task_t &rhs) const {
+    return root_task == rhs.root_task &&
+           name == rhs.name &&
+           goal == rhs.goal &&
+           deadline == rhs.deadline &&
+           in_work_time == rhs.in_work_time &&
+           status == rhs.status &&
+           parent_task == rhs.parent_task;
+}
+
+std::string task::task_t::to_string() const {
+    return "task_id: " + std::to_string(task_id) + "\n" +
+           "root_task: " + std::to_string(root_task) + "\n" +
+           "name: " + name + "\n" +
+           "goal: " + goal + "\n" +
+           "deadline: " + std::to_string(deadline) + "\n" +
+           "in_work_time: " + std::to_string(in_work_time) + "\n" +
+           "status: " + std::to_string(static_cast<int>(status)) + "\n" +
+           "parent_task: " + std::to_string(parent_task) + "\n";
 }
