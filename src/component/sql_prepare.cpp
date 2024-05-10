@@ -46,6 +46,7 @@ const char* key_sql_map[][2] = {
         {"delete_task_ui", "delete from task_ui where id = ?;"},
         {"clear_all_task_ui", "delete from task_ui;"},
         {"add_suspended_task", "insert into suspended_task (id, type, info) values (?,?,?);"},
+        {"add_or_update_suspended_task", "insert or replace into suspended_task (id, type, info) values (?,?,?);"},
         {"delete_suspended_task", "delete from suspended_task where id = ?;"},
         {"get_suspended_task", "select * from suspended_task where id = ?;"},
         {"get_suspended_task_by_type", "select * from suspended_task where type = ?;"},

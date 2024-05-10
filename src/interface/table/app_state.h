@@ -12,6 +12,7 @@ namespace app_state {
     int64_t get_root_task();
     bool set_now_viewing_task(int64_t now_viewing_task);
     int64_t get_now_viewing_task();
+    bool back_to_parent_task();
     bool set_now_selected_task(int64_t now_selected_task);
     int64_t get_now_selected_task();
 }

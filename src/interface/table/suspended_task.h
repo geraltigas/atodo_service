@@ -87,6 +87,8 @@ namespace suspended_task {
 
     bool add_suspended_task(suspended_task_t suspended_task);
 
+    bool add_or_update_suspended_task(suspended_task_t suspended_task);
+
     bool delete_suspended_task(int64_t task_id);
 
     suspended_task_t get_suspended_task(int64_t task_id);

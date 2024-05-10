@@ -6,6 +6,9 @@
 #include "interface/table/task.h"
 #include "app.h"
 #include "glog/logging.h"
+#include "interface/table/task_trigger.h"
+#include "interface/table/task_after_effect.h"
+#include "interface/table/suspended_task.h"
 
 TEST(task_test, add_task) {
     app::init(0, nullptr);
@@ -272,4 +275,52 @@ TEST(task_test, clear_all_tasks) {
     task::task_t task2 = task::get_task_by_id(task_id);
     EXPECT_EQ(task2.task_id, -1);
     task::clear_all_tasks();
+}
+
+TEST(task_test, get_set_default_task) {
+    app::init(0, nullptr);
+    task::clear_all_tasks();
+    task_trigger::clear_task_triggers();
+    task_after_effect::clear_all_after_effects();
+    suspended_task::clear_all_suspended_tasks();
+    int64_t id = task::add_task_default("taskt", "taskt", 1, true);
+    task::task_detail_t task_detail = task::get_detailed_task(id);
+    EXPECT_EQ(task_detail.task_id, id);
+    EXPECT_EQ(task_detail.name, "taskt");
+    EXPECT_EQ(task_detail.goal, "taskt");
+    EXPECT_EQ(task_detail.deadline, "1");
+    EXPECT_EQ(task_detail.in_work_time, true);
+    EXPECT_EQ(task_detail.status, "todo");
+    EXPECT_EQ(task_detail.trigger_type.size(), 0);
+    EXPECT_EQ(task_detail.after_effect_type.size(), 0);
+    EXPECT_EQ(task_detail.suspended_task_type.size(), 0);
+    EXPECT_EQ(task_detail.resume_time, "");
+    EXPECT_EQ(task_detail.email, "");
+    EXPECT_EQ(task_detail.keywords.size(), 0);
+    EXPECT_EQ(task_detail.event_name, "");
+    EXPECT_EQ(task_detail.event_description, "");
+    EXPECT_EQ(task_detail.intervals.size(), 0);
+    task::task_detail_t task_detail1;
+    task_detail1.task_id = id;
+    task_detail1.name = "taskt1";
+    task_detail1.goal = "taskt1";
+    task_detail1.deadline = "2";
+    task_detail1.in_work_time = false;
+    task_detail1.status = "suspended";
+    task_detail1.trigger_type = {"event"};
+    task_detail1.after_effect_type = {"periodic"};
+    task_detail1.suspended_task_type = {"time"};
+    task_detail1.resume_time = "3";
+    task_detail1.event_name = "event";
+    task_detail1.event_description = "event";
+    task_detail1.now_at = 1;
+    task_detail1.period = 1;
+    task_detail1.intervals = {1};
+    EXPECT_TRUE(task::set_detailed_task(task_detail1));
+    task::task_detail_t task_detail2 = task::get_detailed_task(id);
+    EXPECT_TRUE(task_detail1 == task_detail2);
+    task::clear_all_tasks();
+    task_trigger::clear_task_triggers();
+    task_after_effect::clear_all_after_effects();
+    suspended_task::clear_all_suspended_tasks();
 }

@@ -29,6 +29,7 @@ namespace task_ui {
         }
     };
 
+    bool add_or_update_task_uis(const std::vector<task_ui::task_ui_t>& task_ui_list);
     bool add_or_update_task_ui(int64_t task_id, int64_t parent_task, int64_t position_x, int64_t position_y);
     task_ui_t get_task_ui_by_id(int64_t task_id);
     std::vector<task_ui_t> get_task_ui_by_parent_task(int64_t parent_task);

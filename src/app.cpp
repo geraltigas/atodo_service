@@ -46,6 +46,8 @@ int manage_log_dir() {
     return 0;
 }
 
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "ConstantFunctionResult"
 bool app::_init::glog(int argc, char *argv[]) {
     // check whether glog is initialized
     if (google::IsGoogleLoggingInitialized()) {
@@ -64,6 +66,7 @@ bool app::_init::glog(int argc, char *argv[]) {
     FLAGS_stderrthreshold = google::GLOG_INFO;
     return true;
 }
+#pragma clang diagnostic pop
 
 bool app::_init::meta_database() {
     if(meta::create_if_not_exist()) {

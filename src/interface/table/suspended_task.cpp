@@ -46,8 +46,7 @@ bool suspended_task::delete_suspended_task(int64_t task_id) {
 suspended_task::suspended_task_t suspended_task::get_suspended_task(int64_t task_id) {
     sqlite3_stmt *stmt = sql_prepare::get_stmt("get_suspended_task");
     sqlite3_bind_int64(stmt, 1, task_id);
-    int rc;
-    if ((rc = sqlite3_step(stmt)) == SQLITE_ROW) {
+    if (sqlite3_step(stmt) == SQLITE_ROW) {
         suspended_task_t suspended_task;
         suspended_task.task_id = sqlite3_column_int64(stmt, 0);
         suspended_task.type = static_cast<suspended_task_type>(sqlite3_column_int(stmt, 1));
@@ -123,6 +122,31 @@ std::vector<suspended_task::suspended_task_t> suspended_task::get_all_suspended_
 
 bool suspended_task::clear_all_suspended_tasks() {
     sqlite3_stmt *stmt = sql_prepare::get_stmt("clear_all_suspended_tasks");
+    int rc = sqlite3_step(stmt);
+    if (rc != SQLITE_DONE) {
+        sqlite3_reset(stmt);
+        return false;
+    }
+    sqlite3_reset(stmt);
+    return true;
+}
+
+bool suspended_task::add_or_update_suspended_task(suspended_task::suspended_task_t suspended_task) {
+    sqlite3_stmt *stmt = sql_prepare::get_stmt("add_or_update_suspended_task");
+
+    sqlite3_bind_int64(stmt, 1, suspended_task.task_id);
+    sqlite3_bind_int64(stmt, 2, static_cast<int64_t>(suspended_task.type));
+    std::string info;
+    switch (suspended_task.type) {
+        case suspended_task_type::time:
+            info = suspended_task.time_info.to_json();
+            break;
+        case suspended_task_type::email:
+            info = suspended_task.email_info.to_json();
+            break;
+    }
+    sqlite3_bind_text(stmt, 3, info.c_str(), -1, SQLITE_STATIC);
+
     int rc = sqlite3_step(stmt);
     if (rc != SQLITE_DONE) {
         sqlite3_reset(stmt);

@@ -55,10 +55,7 @@ namespace task_trigger {
     struct task_trigger_t {
         int64_t task_id = -1;
         task_trigger_type type;
-        union {
-            dependency_t dependency;
-            event_t event;
-        };
+        event_t event;
 
         task_trigger_t();
         ~task_trigger_t();

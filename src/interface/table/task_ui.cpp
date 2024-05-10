@@ -3,7 +3,9 @@
 //
 
 #include "task_ui.h"
+#include "app_state.h"
 #include <component/sql_prepare.h>
+#include <algorithm>
 
 bool task_ui::add_or_update_task_ui(int64_t task_id, int64_t parent_task, int64_t position_x, int64_t position_y) {
     sqlite3_stmt *stmt = sql_prepare::get_stmt("add_or_update_task_ui");
@@ -24,8 +26,7 @@ bool task_ui::add_or_update_task_ui(int64_t task_id, int64_t parent_task, int64_
 task_ui::task_ui_t task_ui::get_task_ui_by_id(int64_t task_id) {
     sqlite3_stmt *stmt = sql_prepare::get_stmt("get_task_ui_by_id");
     sqlite3_bind_int64(stmt, 1, task_id);
-    int rc;
-    if ((rc = sqlite3_step(stmt)) == SQLITE_ROW) {
+    if (sqlite3_step(stmt) == SQLITE_ROW) {
         task_ui_t task_ui;
         task_ui.task_id = sqlite3_column_int64(stmt, 0);
         task_ui.parent_task = sqlite3_column_int64(stmt, 1);
@@ -79,5 +80,24 @@ bool task_ui::clear_all_task_ui() {
         return false;
     }
     sqlite3_reset(stmt);
+    return true;
+}
+
+bool task_ui::add_or_update_task_uis(const std::vector<task_ui::task_ui_t>& task_ui_list) {
+    sqlite3_stmt *stmt = sql_prepare::get_stmt("add_or_update_task_ui");
+    int64_t parent_task = app_state::get_now_viewing_task();
+    for (auto &task_ui : task_ui_list) {
+        sqlite3_bind_int64(stmt, 1, task_ui.task_id);
+        sqlite3_bind_int64(stmt, 2, parent_task);
+        sqlite3_bind_int64(stmt, 3, task_ui.position_x);
+        sqlite3_bind_int64(stmt, 4, task_ui.position_y);
+
+        int rc = sqlite3_step(stmt);
+        if (rc != SQLITE_DONE) {
+            sqlite3_reset(stmt);
+            return false;
+        }
+        sqlite3_reset(stmt);
+    }
     return true;
 }

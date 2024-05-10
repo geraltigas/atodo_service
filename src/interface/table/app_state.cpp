@@ -6,6 +6,7 @@
 #include "component/sql_prepare.h"
 #include "glog/logging.h"
 #include "interface/database.h"
+#include "task.h"
 
 bool app_state::set_root_task(int64_t root_task) {
     sqlite3_stmt *stmt = sql_prepare::get_stmt("set_root_task");
@@ -53,6 +54,19 @@ int64_t app_state::get_now_selected_task() {
     int64_t now_selected_task = sqlite3_column_int64(stmt, 0);
     sqlite3_reset(stmt);
     return now_selected_task;
+}
+
+bool app_state::back_to_parent_task() {
+    int64_t now_viewing_task = get_now_viewing_task();
+    if (now_viewing_task == -1) {
+        return false;
+    }
+    task::task_t task1 = task::get_task_by_id(now_viewing_task);
+    if (task1.parent_task == -1) {
+        return false;
+    }
+    set_now_viewing_task(task1.parent_task);
+    return true;
 }
 
 

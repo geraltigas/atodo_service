@@ -20,7 +20,7 @@ std::vector<std::string> task_show::get_show_stack() {
     task::task_t task1 = task::get_task_by_id(now_viewing_task_id);
     std::vector<std::string> stack;
     stack.push_back(task1.name);
-    while (task1.parent_task != -1) {
+    while (task1.task_id != -1) {
         task1 = task::get_task_by_id(task1.parent_task);
         stack.push_back(task1.name);
     }
@@ -104,6 +104,7 @@ task_show::show_data_t task_show::get_show_data_by_id(int64_t id) {
     for (int i = 0; i < tasks.size(); i++) {
         task_show::show_node_t node;
         node.id = std::to_string(tasks[i].task_id);
+        node.name = tasks[i].name;
         node.position.x = task_uis[i].position_x;
         node.position.y = task_uis[i].position_y;
         show_data.nodes.push_back(std::move(node));
@@ -173,6 +174,7 @@ crow::json::wvalue task_show::show_data_t::to_crow_json() {
     for (auto & node : nodes) {
         crow::json::wvalue node_json;
         node_json["id"] = node.id;
+        node_json["name"] = node.name;
         crow::json::wvalue position_json;
         position_json["x"] = node.position.x;
         position_json["y"] = node.position.y;
@@ -232,24 +234,28 @@ task_show::show_edge_t &task_show::show_edge_t::operator=(task_show::show_edge_t
 
 task_show::show_node_t::show_node_t() {
     id = "";
+    name = "";
     position.x = 0;
     position.y = 0;
 }
 
 task_show::show_node_t::~show_node_t() {
     id = "";
+    name = "";
     position.x = 0;
     position.y = 0;
 }
 
 task_show::show_node_t::show_node_t(task_show::show_node_t &&other) noexcept {
     id = std::move(other.id);
+    name = std::move(other.name);
     position = other.position;
 }
 
 task_show::show_node_t &task_show::show_node_t::operator=(task_show::show_node_t &&other) noexcept {
     if (this != &other) {
         id = std::move(other.id);
+        name = std::move(other.name);
         position = other.position;
     }
     return *this;
@@ -257,6 +263,7 @@ task_show::show_node_t &task_show::show_node_t::operator=(task_show::show_node_t
 
 task_show::show_node_t::show_node_t(const task_show::show_node_t &other) {
     id = other.id;
+    name = other.name;
     position = other.position;
 }
 

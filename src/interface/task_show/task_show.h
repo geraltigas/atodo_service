@@ -59,6 +59,7 @@ namespace task_show {
 
     struct show_node_t {
         std::string id;
+        std::string name;
         position_t position;
 
         show_node_t();
