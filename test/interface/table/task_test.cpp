@@ -319,8 +319,45 @@ TEST(task_test, get_set_default_task) {
     EXPECT_TRUE(task::set_detailed_task(task_detail1));
     task::task_detail_t task_detail2 = task::get_detailed_task(id);
     EXPECT_TRUE(task_detail1 == task_detail2);
+    task_detail1.name = "taskt2";
+    task::set_detailed_task(task_detail1);
+    task::task_detail_t task_detail3 = task::get_detailed_task(id);
+    EXPECT_TRUE(task_detail1 == task_detail3);
+    task_detail1.goal = "taskt3";
+    task::set_detailed_task(task_detail1);
+    task::task_detail_t task_detail4 = task::get_detailed_task(id);
+    EXPECT_TRUE(task_detail1 == task_detail4);
+    task_detail1.deadline = "4";
+    task::set_detailed_task(task_detail1);
+    task::task_detail_t task_detail5 = task::get_detailed_task(id);
+    EXPECT_TRUE(task_detail1 == task_detail5);
+    task_detail1.in_work_time = true;
+    task::set_detailed_task(task_detail1);
+    task::task_detail_t task_detail6 = task::get_detailed_task(id);
+    EXPECT_TRUE(task_detail1 == task_detail6);
+    task_detail1.status = "todo";
+    task::set_detailed_task(task_detail1);
+    task::task_detail_t task_detail7 = task::get_detailed_task(id);
+    task_detail1.suspended_task_type.clear();
+    task_detail1.resume_time = "";
+    EXPECT_TRUE(task_detail1 == task_detail7);
+    task_detail1.trigger_type.clear();
+    task::set_detailed_task(task_detail1);
+    task::task_detail_t task_detail8 = task::get_detailed_task(id);
+    task_detail1.event_name = "";
+    task_detail1.event_description = "";
+    EXPECT_TRUE(task_detail1 == task_detail8);
+    task_detail1.after_effect_type.clear();
+    task::set_detailed_task(task_detail1);
+    task::task_detail_t task_detail9 = task::get_detailed_task(id);
+    task_detail1.now_at = -1;
+    task_detail1.period = -1;
+    task_detail1.intervals.clear();
+    EXPECT_TRUE(task_detail1 == task_detail9);
     task::clear_all_tasks();
     task_trigger::clear_task_triggers();
     task_after_effect::clear_all_after_effects();
     suspended_task::clear_all_suspended_tasks();
 }
+
+

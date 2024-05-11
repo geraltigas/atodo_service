@@ -33,6 +33,8 @@ namespace task {
         int64_t period;
         std::vector<int64_t> intervals;
 
+        task_detail_t();
+
         [[nodiscard]] crow::json::wvalue to_json() const;
 
         bool operator==(const task_detail_t &rhs) const;

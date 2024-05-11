@@ -558,3 +558,23 @@ void task::task_detail_t::from_json(const crow::json::rvalue& rvalue) {
         keywords.push_back(i.s());
     }
 }
+
+task::task_detail_t::task_detail_t() {
+    task_id = -1;
+    name = "";
+    goal = "";
+    deadline = "";
+    in_work_time = false;
+    status = "";
+    trigger_type = {};
+    after_effect_type = {};
+    suspended_task_type = {};
+    resume_time = "";
+    email = "";
+    keywords = {};
+    event_name = "";
+    event_description = "";
+    now_at = -1;
+    period = -1;
+    intervals = {};
+}
