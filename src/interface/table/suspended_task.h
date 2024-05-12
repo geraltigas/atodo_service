@@ -14,7 +14,27 @@
 #include <glog/logging.h>
 
 namespace suspended_task {
-    struct time_task_info_t {
+    struct time_task_info_t;
+
+    struct email_task_info_t;
+
+    struct suspended_task_t;
+
+    bool add_suspended_task(suspended_task_t suspended_task);
+
+    bool add_or_update_suspended_task(suspended_task_t suspended_task);
+
+    bool delete_suspended_task(int64_t task_id);
+
+    suspended_task_t get_suspended_task(int64_t task_id);
+
+    std::vector<suspended_task_t> get_suspended_task_by_type(suspended_task_type type);
+
+    std::vector<suspended_task_t> get_all_suspended_tasks();
+
+    bool clear_all_suspended_tasks();
+
+    struct time_task_info_t  {
         int64_t timestamp{};
 
         bool operator==(const time_task_info_t &rhs) const;
@@ -32,7 +52,7 @@ namespace suspended_task {
         static time_task_info_t from_json(const json &json_str);
     };
 
-    struct email_task_info_t {
+    struct email_task_info_t  {
         std::string email;
         std::vector<std::string> keywords;
 
@@ -67,7 +87,7 @@ namespace suspended_task {
         ~email_task_info_t();
     };
 
-    struct suspended_task_t {
+    struct suspended_task_t  {
         int64_t task_id = -1;
         suspended_task_type type;
         union {
@@ -82,22 +102,10 @@ namespace suspended_task {
         // copy constructor
         suspended_task_t(const suspended_task_t &suspended_task);
 
+        // move assignment
+        suspended_task_t &operator=(suspended_task_t &&suspended_task) noexcept;
         ~suspended_task_t();
     };
-
-    bool add_suspended_task(suspended_task_t suspended_task);
-
-    bool add_or_update_suspended_task(suspended_task_t suspended_task);
-
-    bool delete_suspended_task(int64_t task_id);
-
-    suspended_task_t get_suspended_task(int64_t task_id);
-
-    std::vector<suspended_task_t> get_suspended_task_by_type(suspended_task_type type);
-
-    std::vector<suspended_task_t> get_all_suspended_tasks();
-
-    bool clear_all_suspended_tasks();
 };
 
 

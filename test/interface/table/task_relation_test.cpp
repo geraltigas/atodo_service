@@ -8,6 +8,7 @@
 
 TEST(task_relation_test, add_realtion) {
     app::init(0, nullptr);
+    task_relation::clear_all_relations();
     EXPECT_TRUE(task_relation::add_relation(0, 1, 2));
     EXPECT_TRUE(task_relation::add_relation(0, 1, 3));
     EXPECT_TRUE(task_relation::add_relation(0, 1, 4));
@@ -42,7 +43,6 @@ TEST(task_relation_test, add_realtion) {
     EXPECT_EQ(target_tasks.size(), 0);
     source_tasks = task_relation::get_source_tasks(4);
     EXPECT_EQ(source_tasks.size(), 0);
-
     task_relation::clear_all_relations();
 }
 

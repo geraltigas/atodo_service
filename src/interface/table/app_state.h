@@ -15,6 +15,10 @@ namespace app_state {
     bool back_to_parent_task();
     bool set_now_selected_task(int64_t now_selected_task);
     int64_t get_now_selected_task();
+    bool set_work_time(int64_t work_time);
+    int64_t get_work_time();
+    bool set_today_work_start(bool today_work_start);
+    bool get_today_work_start();
 }
 
 

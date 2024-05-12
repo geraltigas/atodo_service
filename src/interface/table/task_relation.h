@@ -23,6 +23,7 @@ namespace task_relation {
     bool clear_all_relations();
     std::vector<int64_t> get_target_tasks(int64_t source_task);
     std::vector<int64_t> get_source_tasks(int64_t target_task);
+    bool have_source_task(int64_t task_id);
     std::vector<task_relation_t> get_relations_by_parent_task(int64_t parent_task);
 };
 

@@ -9,8 +9,8 @@
 
 enum class task_status : int {
     todo = 0,
-    in_progress = 1,
-    paused = 2,
+//    in_progress = 1,
+//    paused = 2,
     suspended = 3,
     done = 4
 };
@@ -19,7 +19,7 @@ std::string task_status_to_string(task_status status);
 task_status task_status_from_string(const std::string &status);
 
 enum class task_trigger_type : int{
-    dependency = 0,
+//    dependency = 0,
     event = 1
 };
 

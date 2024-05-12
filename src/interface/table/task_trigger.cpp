@@ -5,9 +5,8 @@
 #include "task_trigger.h"
 #include <component/sql_prepare.h>
 #include <json/json.h>
-#include <glog/logging.h>
 
-bool task_trigger::add_or_update_task_trigger(task_trigger::task_trigger_t task_trigger) {
+bool task_trigger::add_or_update_task_trigger(const task_trigger::task_trigger_t& task_trigger) {
     sqlite3_stmt *stmt = sql_prepare::get_stmt("add_or_update_task_trigger");
 
     sqlite3_bind_int64(stmt, 1, task_trigger.task_id);
@@ -17,9 +16,9 @@ bool task_trigger::add_or_update_task_trigger(task_trigger::task_trigger_t task_
         case task_trigger_type::event:
             info = task_trigger.event.to_json();
             break;
-        case task_trigger_type::dependency:
-            LOG(ERROR) << "task_trigger_type::dependency is not supported";
-            return false;
+//        case task_trigger_type::dependency:
+//            LOG(ERROR) << "task_trigger_type::dependency is not supported";
+//            return false;
     }
     sqlite3_bind_text(stmt, 3, info.c_str(), -1, SQLITE_STATIC);
 
@@ -75,9 +74,9 @@ task_trigger::task_trigger_t task_trigger::get_task_trigger(int64_t task_id, tas
     if (rc == SQLITE_ROW) {
         const char *info = reinterpret_cast<const char *>(sqlite3_column_text(stmt, 2));
         switch (type) {
-            case task_trigger_type::dependency:
-                LOG(ERROR) << "task_trigger_type::dependency is not supported";
-                break;
+//            case task_trigger_type::dependency:
+//                LOG(ERROR) << "task_trigger_type::dependency is not supported";
+//                break;
             case task_trigger_type::event:
                 task_trigger.event = event_t::from_json(info);
                 break;
@@ -99,9 +98,9 @@ std::vector<task_trigger::task_trigger_t> task_trigger::get_task_triggers_by_id(
         task_trigger.type = static_cast<task_trigger_type>(sqlite3_column_int(stmt, 1));
         const char *info = reinterpret_cast<const char *>(sqlite3_column_text(stmt, 2));
         switch (task_trigger.type) {
-            case task_trigger_type::dependency:
-                LOG(ERROR) << "task_trigger_type::dependency is not supported";
-                break;
+//            case task_trigger_type::dependency:
+//                LOG(ERROR) << "task_trigger_type::dependency is not supported";
+//                break;
             case task_trigger_type::event:
                 task_trigger.event = event_t::from_json(info);
                 break;
@@ -124,9 +123,9 @@ std::vector<task_trigger::task_trigger_t> task_trigger::get_task_triggers_by_typ
         task_trigger.type = type;
         const char *info = reinterpret_cast<const char *>(sqlite3_column_text(stmt, 2));
         switch (type) {
-            case task_trigger_type::dependency:
-                LOG(ERROR) << "task_trigger_type::dependency is not supported";
-                break;
+//            case task_trigger_type::dependency:
+//                LOG(ERROR) << "task_trigger_type::dependency is not supported";
+//                break;
             case task_trigger_type::event:
                 task_trigger.event = event_t::from_json(info);
                 break;
@@ -147,9 +146,9 @@ std::vector<task_trigger::task_trigger_t> task_trigger::get_all_task_triggers() 
         task_trigger.type = static_cast<task_trigger_type>(sqlite3_column_int(stmt, 1));
         const char *info = reinterpret_cast<const char *>(sqlite3_column_text(stmt, 2));
         switch (task_trigger.type) {
-            case task_trigger_type::dependency:
-                LOG(ERROR) << "task_trigger_type::dependency is not supported";
-                break;
+//            case task_trigger_type::dependency:
+//                LOG(ERROR) << "task_trigger_type::dependency is not supported";
+//                break;
             case task_trigger_type::event:
                 task_trigger.event = event_t::from_json(info);
                 break;
@@ -179,9 +178,9 @@ task_trigger::task_trigger_t::task_trigger_t() {
 
 task_trigger::task_trigger_t::~task_trigger_t() {
     switch (type) {
-        case task_trigger_type::dependency:
-            LOG(ERROR) << "task_trigger_type::dependency is not supported";
-            break;
+//        case task_trigger_type::dependency:
+//            LOG(ERROR) << "task_trigger_type::dependency is not supported";
+//            break;
         case task_trigger_type::event:
             event.~event_t();
             break;
@@ -193,9 +192,9 @@ task_trigger::task_trigger_t::task_trigger_t(task_trigger::task_trigger_t &&trig
     task_id = trigger.task_id;
     type = trigger.type;
     switch (type) {
-        case task_trigger_type::dependency:
-            LOG(ERROR) << "task_trigger_type::dependency is not supported";
-            break;
+//        case task_trigger_type::dependency:
+//            LOG(ERROR) << "task_trigger_type::dependency is not supported";
+//            break;
         case task_trigger_type::event:
             event = std::move(trigger.event);
             break;
@@ -206,9 +205,9 @@ task_trigger::task_trigger_t::task_trigger_t(const task_trigger::task_trigger_t 
     task_id = trigger.task_id;
     type = trigger.type;
     switch (type) {
-        case task_trigger_type::dependency:
-            LOG(ERROR) << "task_trigger_type::dependency is not supported";
-            break;
+//        case task_trigger_type::dependency:
+//            LOG(ERROR) << "task_trigger_type::dependency is not supported";
+//            break;
         case task_trigger_type::event:
             event = trigger.event;
             break;

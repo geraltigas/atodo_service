@@ -131,6 +131,21 @@ std::vector<task_relation::task_relation_t> task_relation::get_relations_by_pare
     return relations;
 }
 
+bool task_relation::have_source_task(int64_t task_id) {
+    sqlite3_stmt *stmt = sql_prepare::get_stmt("have_source_task");
+    sqlite3_bind_int64(stmt, 1, task_id);
+    // get count
+    int rc = sqlite3_step(stmt);
+    if (rc != SQLITE_ROW) {
+        LOG(ERROR) << "sqlite3_step failed: " << sqlite3_errmsg(database::get_sqlite_db());
+        sqlite3_reset(stmt);
+        return false;
+    }
+    int count = sqlite3_column_int(stmt, 0);
+    sqlite3_reset(stmt);
+    return count > 0;
+}
+
 
 
 

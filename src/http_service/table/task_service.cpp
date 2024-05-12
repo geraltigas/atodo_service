@@ -6,7 +6,7 @@
 #include <interface/table/task.h>
 
 std::tuple<bool, std::string> task_detail_input_check(const task::task_detail_t &task_detail) {
-    static const std::vector<std::string> status_list = {"todo", "in_progress", "paused", "suspended", "done"};
+    static const std::vector<std::string> status_list = {"todo", "suspended", "done"};
     static const std::vector<std::string> trigger_type_list = {"event"};
     static const std::vector<std::string> after_effect_type_list = {"periodic"};
     static const std::vector<std::string> suspended_task_type_list = {"time", "email"};
@@ -51,6 +51,10 @@ std::tuple<bool, std::string> task_detail_input_check(const task::task_detail_t 
         return after_effect_type != "periodic" || (task_detail.now_at >= 0 && task_detail.period >= 0 && !task_detail.intervals.empty());
     });
 
+    if (task_detail.suspended_task_type.size() > 1) {
+        return { false, "can only choose one suspended_task_type" };
+    }
+
     if (!task_check) {
         return { false, "task_id should be non-negative" };
     }
@@ -68,7 +72,7 @@ std::tuple<bool, std::string> task_detail_input_check(const task::task_detail_t 
     }
 
     if (!status_check) {
-        return { false, "status should be one of todo, in_progress, paused, suspended, done" };
+        return { false, "status should be one of todo, in_progress, suspended, done" };
     }
 
     if (!trigger_type_check) {

@@ -10,17 +10,24 @@
 #include <http_service/task_show/task_show_service.h>
 #include <http_service/table/app_state_service.h>
 #include <http_service/database_service.h>
+#include <http_service/scheduler_service.h>
 
 crow::SimpleApp app;
 
 bool service::init_service() {
+    CROW_ROUTE(app, "/close").methods("POST"_method)([]() {
+        app.stop();
+        return "Server is shutting down";
+    });
+
     return
     database_service::init_database_service(app) &&
     task_show_service::init_task_show_service(app) &&
     task_service::init_task_service(app) &&
     task_ui_service::init_task_ui_service(app) &&
     task_relation_service::init_task_relation_service(app) &&
-    app_state_service::init_app_state_service(app);
+    app_state_service::init_app_state_service(app) &&
+    scheduler_service::init_scheduler_service(app);
 }
 
 bool service::run_service(int64_t port) {

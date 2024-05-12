@@ -67,7 +67,7 @@ namespace task_trigger {
         task_trigger_t(const task_trigger_t& trigger);
     };
 
-    bool add_or_update_task_trigger(task_trigger_t task_trigger);
+    bool add_or_update_task_trigger(const task_trigger_t& task_trigger);
     bool delete_task_trigger(int64_t task_id, task_trigger_type type);
     bool delete_task_triggers_by_id(int64_t task_id);
     task_trigger_t get_task_trigger(int64_t task_id, task_trigger_type type);

@@ -304,3 +304,23 @@ suspended_task::suspended_task_t::~suspended_task_t() {
             break;
     }
 }
+
+suspended_task::suspended_task_t &
+suspended_task::suspended_task_t::operator=(suspended_task::suspended_task_t &&suspended_task) noexcept {
+    if (this == &suspended_task) {
+        return *this;
+    }
+    task_id = suspended_task.task_id;
+    type = suspended_task.type;
+    switch (type) {
+        case suspended_task_type::time:
+            time_info = time_task_info_t();
+            time_info = suspended_task.time_info;
+            break;
+        case suspended_task_type::email:
+            email_info = email_task_info_t();
+            email_info = std::move(suspended_task.email_info);
+            break;
+    }
+    return *this;
+}

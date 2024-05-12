@@ -256,11 +256,14 @@ bool task::eliminate_task(int64_t task_id) {
         return false;
     }
     std::vector<task::task_t> tasks = get_tasks_by_parent_task(task_id);
+    task_ui::delete_task_ui(task_id);
+    task_relation::remove_all_related_relations(task_id);
+    task_trigger::delete_task_triggers_by_id(task_id);
+    task_after_effect::delete_after_effect_by_id(task_id);
+    suspended_task::delete_suspended_task(task_id);
     for (auto &i : tasks) {
         eliminate_task(i.task_id);
     }
-    task_ui::delete_task_ui(task_id);
-    task_relation::remove_all_related_relations(task_id);
     return delete_task(task_id);
 }
 
@@ -275,13 +278,13 @@ task::task_detail_t task::get_detailed_task(int64_t task_id) {
     task_detail.status = task_status_to_string(task.status);
     std::vector<task_trigger::task_trigger_t> task_triggers = task_trigger::get_task_triggers_by_id(task_id);
     for (auto &i : task_triggers) {
-        if (i.type == task_trigger_type::dependency) {
-            task_detail.trigger_type.push_back(task_trigger_type_to_string(i.type));
-        } else {
+//        if (i.type == task_trigger_type::dependency) {
+//            task_detail.trigger_type.push_back(task_trigger_type_to_string(i.type));
+//        } else {
             task_detail.trigger_type.push_back(task_trigger_type_to_string(i.type));
             task_detail.event_name = i.event.event_name;
             task_detail.event_description = i.event.event_description;
-        }
+//        }
     }
 
     std::vector<task_after_effect::after_effect_t> after_effects = task_after_effect::get_after_effects_by_id(task_id);
@@ -375,6 +378,28 @@ bool task::set_detailed_task(const task_detail_t &task) {
     }
 
     return true;
+}
+
+bool task::have_sub_tasks(int64_t task_id) {
+    sqlite3_stmt *stmt = sql_prepare::get_stmt("have_sub_tasks");
+    sqlite3_bind_int64(stmt, 1, task_id);
+    int count = 0;
+    if (sqlite3_step(stmt) == SQLITE_ROW) {
+        count = sqlite3_column_int(stmt, 0);
+    }
+    sqlite3_reset(stmt);
+    return count > 0;
+}
+
+std::vector<int64_t> task::get_sub_tasks(int64_t task_id) {
+    std::vector<int64_t> sub_tasks;
+    sqlite3_stmt *stmt = sql_prepare::get_stmt("get_sub_tasks");
+    sqlite3_bind_int64(stmt, 1, task_id);
+    while (sqlite3_step(stmt) == SQLITE_ROW) {
+        sub_tasks.push_back(sqlite3_column_int64(stmt, 0));
+    }
+    sqlite3_reset(stmt);
+    return sub_tasks;
 }
 
 bool task::task_t::operator==(const task::task_t &rhs) const {
