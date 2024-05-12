@@ -76,6 +76,7 @@ FetchContent_MakeAvailable(googletest)
 
 # glog
 #add_subdirectory(glog)
+set(BUILD_SHARED_LIBS OFF)
 FetchContent_Declare(
         glog
         GIT_REPOSITORY https://github.com/google/glog.git
