@@ -141,6 +141,8 @@ namespace scheduler {
         std::string event_description;
 
         event_trigger_task_show_t();
+        event_trigger_task_show_t(int64_t id, const std::string &name, const std::string &goal, int64_t deadline,
+                                  bool in_work_time, const std::string &event_name, const std::string &event_description);
         ~event_trigger_task_show_t();
 
         // copy constructor

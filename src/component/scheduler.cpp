@@ -7,24 +7,9 @@
 #include <interface/table/task.h>
 #include <interface/table/task_relation.h>
 #include <interface/table/suspended_task.h>
+#include <interface/table/task_trigger.h>
 #include <set>
 #include <type.h>
-
-//bool all_viewed(std::set<int64_t> &wait_for_viewing) {
-//    bool all_viewed = true;
-//    for (auto &i : wait_for_viewing) {
-//        task::task_t task_ = task::get_task_by_id(i);
-//        if (task_.status == task_status::t odo) {
-//            all_viewed = false;
-//            break;
-//        }
-//        if (task::have_sub_tasks(i)) {
-//            all_viewed = false;
-//            break;
-//        }
-//    }
-//    return all_viewed;
-//}
 
 scheduler::schedule_t scheduler::schedule() {
     std::set<scheduler::task_show_t> tasks;
@@ -38,6 +23,7 @@ scheduler::schedule_t scheduler::schedule() {
     scheduler::suspended_task_show_t suspended_task;
     std::vector<int64_t> source_tasks;
     std::vector<int64_t> sub_tasks;
+    std::vector<task_trigger::task_trigger_t> task_triggers;
     while (!wait_for_viewing.empty()) {
         int64_t task_id = *wait_for_viewing.begin();
         task::task_t task1 = task::get_task_by_id(task_id);
@@ -81,7 +67,15 @@ scheduler::schedule_t scheduler::schedule() {
                     wait_for_viewing.erase(task_id);
                     continue;
                 }
-                tasks.insert(scheduler::task_show_t(task1.task_id, task1.name, task1.goal, task1.deadline, task1.in_work_time));
+                task_triggers.clear();
+                task_triggers = task_trigger::get_task_triggers_by_id(task_id);
+                if (task_triggers.size() == 1) {
+                    event_trigger_tasks.insert(scheduler::event_trigger_task_show_t(task1.task_id, task1.name, task1.goal, task1.deadline, task1.in_work_time, task_triggers[0].event.event_name, task_triggers[0].event.event_description));
+                }else {
+                    tasks.insert(scheduler::task_show_t(task1.task_id, task1.name, task1.goal, task1.deadline, task1.in_work_time));
+                }
+                wait_for_viewing.erase(task_id);
+                continue;
             case task_status::done:
                 wait_for_viewing.erase(task_id);
                 continue;
@@ -385,6 +379,19 @@ bool scheduler::event_trigger_task_show_t::operator<(const scheduler::event_trig
         return deadline < rhs.deadline;
     }
     return id < rhs.id;
+}
+
+scheduler::event_trigger_task_show_t::event_trigger_task_show_t(int64_t id, const std::string &name,
+                                                                const std::string &goal, int64_t deadline,
+                                                                bool in_work_time, const std::string &event_name,
+                                                                const std::string &event_description) {
+    this->id = id;
+    this->name = name;
+    this->goal = goal;
+    this->deadline = deadline;
+    this->in_work_time = in_work_time;
+    this->event_name = event_name;
+    this->event_description = event_description;
 }
 
 scheduler::schedule_t::schedule_t() {

@@ -19,6 +19,10 @@ namespace app_state {
     int64_t get_work_time();
     bool set_today_work_start(bool today_work_start);
     bool get_today_work_start();
+    bool set_now_is_work_time(bool now_is_work_time);
+    bool get_now_is_work_time();
+    bool set_now_doing_task(int64_t now_doing_task);
+    int64_t get_now_doing_task();
 }
 
 

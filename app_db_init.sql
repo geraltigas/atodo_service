@@ -105,12 +105,13 @@ create table if not exists app_state
   now_selected_task integer,
   work_time         timestamp,
   today_work_start  boolean,
+  now_is_work_time  boolean,
   now_doing_task    integer
 );
 
 -- Insert the initial singleton record
-insert into app_state (id, root_task, now_viewing_task, now_selected_task, work_time, today_work_start, now_doing_task)
-VALUES (0, 0, 0, -1, 0, 0, -1);
+insert into app_state (id, root_task, now_viewing_task, now_selected_task, work_time, today_work_start, now_is_work_time, now_doing_task)
+VALUES (0, 0, 0, -1, 0, 0, 0, -1);
 
 -- Drop the existing task_ui table if it exists
 drop table if exists task_ui;
