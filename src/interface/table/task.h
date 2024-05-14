@@ -55,6 +55,7 @@ namespace task {
     bool update_task_in_work_time(int64_t task_id, bool in_work_time);
     bool update_task_status(int64_t task_id, task_status status);
     bool update_task_parent_task(int64_t task_id, int64_t parent_task);
+    bool complete_task(int64_t task_id);
     std::vector<task_t> get_all_tasks();
     task_t get_task_by_id(int64_t task_id);
     std::vector<task_t> get_tasks_by_root_task(int64_t root_task);

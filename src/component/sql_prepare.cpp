@@ -19,8 +19,6 @@ const char* key_sql_map[][2] = {
         {"get_now_selected_task", "select now_selected_task from app_state where id = 0;"},
         {"set_work_time", "update app_state set work_time = ? where id = 0;"},
         {"get_work_time", "select work_time from app_state where id = 0;"},
-        {"set_today_work_start", "update app_state set today_work_start = ? where id = 0;"},
-        {"get_today_work_start", "select today_work_start from app_state where id = 0;"},
         {"set_now_doing_task", "update app_state set now_doing_task = ? where id = 0;"},
         {"get_now_doing_task", "select now_doing_task from app_state where id = 0;"},
         {"set_now_is_work_time", "update app_state set now_is_work_time = ? where id = 0;"},

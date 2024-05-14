@@ -156,5 +156,12 @@ bool task_service::init_task_service(crow::SimpleApp &app) {
         return response;
     });
 
+    CROW_ROUTE(app, "/task/complete_task").methods("POST"_method)([](const crow::request &req) {
+        crow::json::rvalue request = crow::json::load(req.body);
+        crow::json::wvalue response;
+        response["status"] = task::complete_task(request["id"].i());
+        return response;
+    });
+
     return true;
 }

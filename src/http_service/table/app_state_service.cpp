@@ -26,13 +26,6 @@ bool app_state_service::init_app_state_service(crow::SimpleApp &app) {
         return response;
     });
 
-    CROW_ROUTE(app, "/app_state/set_today_work_start").methods("POST"_method)([](const crow::request &req) {
-        crow::json::rvalue request = crow::json::load(req.body);
-        crow::json::wvalue response;
-        response["status"] = app_state::set_today_work_start(request["today_work_start"].b());
-        return response;
-    });
-
     CROW_ROUTE(app, "/app_state/set_now_doing_task").methods("POST"_method)([](const crow::request &req) {
         crow::json::rvalue request = crow::json::load(req.body);
         crow::json::wvalue response;
@@ -43,12 +36,6 @@ bool app_state_service::init_app_state_service(crow::SimpleApp &app) {
     CROW_ROUTE(app, "/app_state/get_work_time").methods("POST"_method)([](const crow::request &req) {
         crow::json::wvalue response;
         response["work_time"] = app_state::get_work_time();
-        return response;
-    });
-
-    CROW_ROUTE(app, "/app_state/get_today_work_start").methods("POST"_method)([](const crow::request &req) {
-        crow::json::wvalue response;
-        response["today_work_start"] = app_state::get_today_work_start();
         return response;
     });
 

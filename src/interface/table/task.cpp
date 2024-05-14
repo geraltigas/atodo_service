@@ -402,6 +402,43 @@ std::vector<int64_t> task::get_sub_tasks(int64_t task_id) {
     return sub_tasks;
 }
 
+bool task::complete_task(int64_t task_id) {
+    const static int64_t delta_time = 60 * 60 * 24 * 1000;
+    task::task_t task = get_task_by_id(task_id);
+    if (task.task_id == -1) {
+        return false;
+    }
+    task_status status = task_status::done;
+    update_task_status(task_id, status);
+    std::vector<task_after_effect::after_effect_t> after_effects = task_after_effect::get_after_effects_by_id(task_id);
+    assert(after_effects.size() <= 1);
+    if (after_effects.empty()) {
+        return true;
+    }
+    task_after_effect::after_effect_t after_effect_ = after_effects[0];
+    if (after_effect_.type == task_after_effect_type::periodic) {
+        task_after_effect::periodic_t periodic = after_effect_.periodic;
+        if (periodic.intervals.empty()) {
+            task_after_effect::delete_after_effect_by_id(task_id);
+            return true;
+        }
+        int64_t now_at = periodic.now_at;
+        int64_t period = periodic.period;
+        std::vector<int64_t> intervals = periodic.intervals;
+        if (now_at == intervals.size() - 1) {
+            after_effect_.periodic.now_at = 0;
+            after_effect_.periodic.period++;
+            update_task_status(task_id, task_status::todo);
+            update_task_deadline(task_id, task.deadline + delta_time * intervals[now_at]);
+        } else {
+            after_effect_.periodic.now_at++;
+            update_task_deadline(task_id, task.deadline + delta_time * intervals[now_at]);
+        }
+        task_after_effect::add_or_update_after_effect(after_effect_);
+    }
+    return true;
+}
+
 bool task::task_t::operator==(const task::task_t &rhs) const {
     return task_id == rhs.task_id &&
            root_task == rhs.root_task &&

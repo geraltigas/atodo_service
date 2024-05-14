@@ -85,22 +85,6 @@ int64_t app_state::get_work_time() {
     return work_time;
 }
 
-bool app_state::set_today_work_start(bool today_work_start) {
-    sqlite3_stmt *stmt = sql_prepare::get_stmt("set_today_work_start");
-    sqlite3_bind_int(stmt, 1, today_work_start);
-    CHECK_ERROR(sqlite3_step(stmt));
-    sqlite3_reset(stmt);
-    return true;
-}
-
-bool app_state::get_today_work_start() {
-    sqlite3_stmt *stmt = sql_prepare::get_stmt("get_today_work_start");
-    CHECK_ERROR_SELECT(sqlite3_step(stmt));
-    bool today_work_start = sqlite3_column_int(stmt, 0);
-    sqlite3_reset(stmt);
-    return today_work_start;
-}
-
 bool app_state::set_now_doing_task(int64_t now_doing_task) {
     sqlite3_stmt *stmt = sql_prepare::get_stmt("set_now_doing_task");
     sqlite3_bind_int64(stmt, 1, now_doing_task);
