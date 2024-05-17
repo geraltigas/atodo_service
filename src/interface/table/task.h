@@ -32,6 +32,8 @@ namespace task {
         int64_t now_at;
         int64_t period;
         std::vector<int64_t> intervals;
+        std::string dependency_constraint;
+        std::string subtask_constraint;
 
         task_detail_t();
 

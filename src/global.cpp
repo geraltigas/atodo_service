@@ -130,4 +130,11 @@ const char * global::app_db_init_sql = "-- Drop the existing tasks table if it e
                                        "  parent_task integer,\n"
                                        "  position_x  integer,\n"
                                        "  position_y  integer\n"
+                                       ");\n"
+                                       "\n"
+                                       "create table if not exists task_constraint\n"
+                                       "(\n"
+                                       "    id integer primary key,\n"
+                                       "    dependency_constraint integer,\n"
+                                       "    subtask_constraint integer\n"
                                        ");";

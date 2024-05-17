@@ -12,6 +12,8 @@
 #include <interface/table/app_state.h>
 #include <interface/table/suspended_task.h>
 #include <interface/table/task_ui.h>
+#include <interface/table/task_constraint.h>
+#include <interface/table/task_constraint.h>
 
 #include <utility>
 
@@ -247,6 +249,7 @@ int64_t task::add_task_default(std::string name, std::string goal, int64_t deadl
     task.parent_task = app_state::get_now_viewing_task();
     int64_t task_id = add_task(task);
     task_ui::add_or_update_task_ui(task_id, task.parent_task, 0, 0);
+    task_constraint::set_task_constraint({task_id, "", ""});
     return task_id;
 }
 
@@ -261,6 +264,7 @@ bool task::eliminate_task(int64_t task_id) {
     task_trigger::delete_task_triggers_by_id(task_id);
     task_after_effect::delete_after_effect_by_id(task_id);
     suspended_task::delete_suspended_task(task_id);
+    task_constraint::delete_task_constraint(task_id);
     for (auto &i : tasks) {
         eliminate_task(i.task_id);
     }
@@ -308,6 +312,10 @@ task::task_detail_t task::get_detailed_task(int64_t task_id) {
             }
         }
     }
+
+    task_constraint::task_constraint_t task_constraint = task_constraint::get_task_constraint(task_id);
+    task_detail.dependency_constraint = task_constraint.dependency_constraint;
+    task_detail.subtask_constraint = task_constraint.subtask_constraint;
 
     return task_detail;
 }
@@ -376,6 +384,8 @@ bool task::set_detailed_task(const task_detail_t &task) {
             }
         }
     }
+
+    task_constraint::set_task_constraint({task_.task_id, task.dependency_constraint, task.subtask_constraint});
 
     return true;
 }
@@ -522,6 +532,9 @@ crow::json::wvalue task::task_detail_t::to_json() const {
         json["after_effect"]["intervals"] = intervals_;
     }
 
+    json["task_constraint"]["dependency_constraint"] = dependency_constraint;
+    json["task_constraint"]["subtask_constraint"] = subtask_constraint;
+
     return json;
 }
 
@@ -579,6 +592,8 @@ bool task::task_detail_t::operator==(const task::task_detail_t &rhs) const {
            event_description == rhs.event_description &&
            now_at == rhs.now_at &&
            period == rhs.period &&
+           dependency_constraint == rhs.dependency_constraint &&
+           subtask_constraint == rhs.subtask_constraint &&
            trigger_type_equal &&
            after_effect_equal &&
            suspended_task_type_equal &&
@@ -619,6 +634,8 @@ void task::task_detail_t::from_json(const crow::json::rvalue& rvalue) {
     for (auto &i : keywords_) {
         keywords.push_back(i.s());
     }
+    dependency_constraint = rvalue["task_constraint"]["dependency_constraint"].s();
+    subtask_constraint = rvalue["task_constraint"]["subtask_constraint"].s();
 }
 
 task::task_detail_t::task_detail_t() {
@@ -639,4 +656,6 @@ task::task_detail_t::task_detail_t() {
     now_at = -1;
     period = -1;
     intervals = {};
+    dependency_constraint = "";
+    subtask_constraint = "";
 }

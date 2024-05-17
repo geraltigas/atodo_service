@@ -123,3 +123,10 @@ create table if not exists task_ui
   position_x  integer,
   position_y  integer
 );
+
+create table if not exists task_constraint
+(
+    id integer primary key,
+    dependency_constraint integer,
+    subtask_constraint integer
+);

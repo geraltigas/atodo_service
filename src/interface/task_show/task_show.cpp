@@ -25,7 +25,6 @@ std::vector<std::string> task_show::get_show_stack() {
         stack.push_back(task1.name);
     }
     stack.pop_back();
-    std::reverse(stack.begin(), stack.end());
     return stack;
 }
 

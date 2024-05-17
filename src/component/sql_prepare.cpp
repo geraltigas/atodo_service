@@ -77,6 +77,9 @@ const char* key_sql_map[][2] = {
         {"get_after_effects_by_type", "select * from task_after_effect where type = ?;"},
         {"get_all_after_effects", "select * from task_after_effect;"},
         {"delete_all_after_effects", "delete from task_after_effect;"},
+        {"set_task_constraint", "insert or replace into task_constraint (id, dependency_constraint, subtask_constraint) values (?,?,?);"},
+        {"get_task_constraint", "select * from task_constraint where id = ?;"},
+        {"delete_task_constraint", "delete from task_constraint where id = ?;"}
 };
 
 std::map<std::string, sqlite3_stmt *> sql_stmt_map;
