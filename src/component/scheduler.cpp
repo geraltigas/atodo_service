@@ -52,6 +52,8 @@ scheduler::schedule_t scheduler::schedule() {
                 source_tasks.clear();
                 sub_tasks.clear();
                 source_tasks = task_relation::get_source_tasks(task_id);
+
+                source_tasks.erase(std::remove_if(source_tasks.begin(), source_tasks.end(), [](int64_t i) { return task::get_task_by_id(i).status == task_status::done; }), source_tasks.end());
                 if (!source_tasks.empty()) {
                     for (auto &i : source_tasks) {
                         wait_for_viewing.insert(i);
@@ -59,14 +61,16 @@ scheduler::schedule_t scheduler::schedule() {
                     wait_for_viewing.erase(task_id);
                     continue;
                 }
+
                 if (task::have_sub_tasks(task_id)) {
-                    sub_tasks = task::get_sub_tasks(task_id);
+                    sub_tasks = task::get_sub_tasks_connected_to_end(task_id);
                     for (auto &i : sub_tasks) {
                         wait_for_viewing.insert(i);
                     }
                     wait_for_viewing.erase(task_id);
                     continue;
                 }
+
                 task_triggers.clear();
                 task_triggers = task_trigger::get_task_triggers_by_id(task_id);
                 if (task_triggers.size() == 1) {

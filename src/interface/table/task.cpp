@@ -16,6 +16,7 @@
 #include <interface/table/task_constraint.h>
 
 #include <utility>
+#include <set>
 
 int64_t task::add_task(const task::task_t &task) {
     sqlite3_stmt *stmt = sql_prepare::get_stmt("insert_task");
@@ -447,6 +448,42 @@ bool task::complete_task(int64_t task_id) {
         task_after_effect::add_or_update_after_effect(after_effect_);
     }
     return true;
+}
+
+std::vector<int64_t> task::get_sub_tasks_connected_to_end(int64_t task_id) {
+    std::vector<int64_t> sub_tasks_connected_to_end;
+    std::vector<task::task_t> tasks = get_tasks_by_parent_task(task_id);
+    std::vector<task_relation::task_relation_t> relations = task_relation::get_relations_by_parent_task(task_id);
+
+    std::set<int64_t> source_set;
+    std::set<int64_t> target_set;
+    std::map<int64_t, bool> connected_map;
+    for (auto & relation : relations) {
+        source_set.insert(relation.source_task);
+        target_set.insert(relation.target_task);
+        connected_map[relation.source_task] = true;
+        connected_map[relation.target_task] = true;
+    }
+
+    std::set<int64_t> intersection = {};
+    std::set_intersection(source_set.begin(), source_set.end(), target_set.begin(), target_set.end(), std::inserter(intersection, intersection.begin()));
+    std::set<int64_t> source_target = {};
+    std::set_difference(source_set.begin(), source_set.end(), intersection.begin(), intersection.end(), std::inserter(source_target, source_target.begin()));
+    std::set<int64_t> target_source = {};
+    std::set_difference(target_set.begin(), target_set.end(), intersection.begin(), intersection.end(), std::inserter(target_source, target_source.begin()));
+
+    sub_tasks_connected_to_end.reserve(target_source.size());
+    for (auto & end : target_source) {
+        sub_tasks_connected_to_end.push_back(end);
+    }
+
+    for (auto & task : tasks) {
+        if (connected_map.find(task.task_id) == connected_map.end()) {
+            sub_tasks_connected_to_end.push_back(task.task_id);
+        }
+    }
+
+    return sub_tasks_connected_to_end;
 }
 
 bool task::task_t::operator==(const task::task_t &rhs) const {

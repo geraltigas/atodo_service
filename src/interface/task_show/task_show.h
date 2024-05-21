@@ -61,6 +61,7 @@ namespace task_show {
         std::string id;
         std::string name;
         position_t position;
+        std::string status;
 
         show_node_t();
         ~show_node_t();

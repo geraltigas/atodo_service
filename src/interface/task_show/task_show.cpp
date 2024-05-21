@@ -104,6 +104,7 @@ task_show::show_data_t task_show::get_show_data_by_id(int64_t id) {
         task_show::show_node_t node;
         node.id = std::to_string(tasks[i].task_id);
         node.name = tasks[i].name;
+        node.status = task_status_to_string(tasks[i].status);
         node.position.x = task_uis[i].position_x;
         node.position.y = task_uis[i].position_y;
         show_data.nodes.push_back(std::move(node));
@@ -174,6 +175,7 @@ crow::json::wvalue task_show::show_data_t::to_crow_json() {
         crow::json::wvalue node_json;
         node_json["id"] = node.id;
         node_json["name"] = node.name;
+        node_json["status"] = node.status;
         crow::json::wvalue position_json;
         position_json["x"] = node.position.x;
         position_json["y"] = node.position.y;
@@ -236,6 +238,7 @@ task_show::show_node_t::show_node_t() {
     name = "";
     position.x = 0;
     position.y = 0;
+    status = "";
 }
 
 task_show::show_node_t::~show_node_t() {
@@ -243,12 +246,14 @@ task_show::show_node_t::~show_node_t() {
     name = "";
     position.x = 0;
     position.y = 0;
+    status = "";
 }
 
 task_show::show_node_t::show_node_t(task_show::show_node_t &&other) noexcept {
     id = std::move(other.id);
     name = std::move(other.name);
     position = other.position;
+    status = std::move(other.status);
 }
 
 task_show::show_node_t &task_show::show_node_t::operator=(task_show::show_node_t &&other) noexcept {
@@ -256,6 +261,7 @@ task_show::show_node_t &task_show::show_node_t::operator=(task_show::show_node_t
         id = std::move(other.id);
         name = std::move(other.name);
         position = other.position;
+        status = std::move(other.status);
     }
     return *this;
 }
@@ -264,6 +270,7 @@ task_show::show_node_t::show_node_t(const task_show::show_node_t &other) {
     id = other.id;
     name = other.name;
     position = other.position;
+    status = other.status;
 }
 
 task_show::position_t::position_t() {

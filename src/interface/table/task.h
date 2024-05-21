@@ -63,6 +63,7 @@ namespace task {
     std::vector<task_t> get_tasks_by_root_task(int64_t root_task);
     std::vector<task_t> get_tasks_by_parent_task(int64_t parent_task);
     std::vector<int64_t> get_sub_tasks(int64_t task_id);
+    std::vector<int64_t> get_sub_tasks_connected_to_end(int64_t task_id);
     bool have_sub_tasks(int64_t task_id);
 
     struct task_t {
