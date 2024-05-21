@@ -29,6 +29,7 @@ const char* key_sql_map[][2] = {
         {"insert_task", "insert into task (root_task, name, goal, deadline, in_work_time, status, parent_task) values (?,?,?,?,?,?,?);"},
         {"delete_task", "delete from task where id = ?;"},
         {"clear_all_tasks", "delete from task where id != 0;"},
+        {"count_sub_task_done", "select count(*) from task where parent_task = ? and status != 4;"},
         {"update_task_name", "update task set name = ? where id = ?;"},
         {"update_task_goal", "update task set goal = ? where id = ?;"},
         {"update_task_deadline", "update task set deadline = ? where id = ?;"},

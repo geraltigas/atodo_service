@@ -413,6 +413,25 @@ std::vector<int64_t> task::get_sub_tasks(int64_t task_id) {
     return sub_tasks;
 }
 
+void task::check_parent_status(int64_t id) {
+    task::task_t task = get_task_by_id(id);
+    if (task.task_id == -1) {
+        return;
+    }
+
+    int64_t parent_task = task.parent_task;
+    sqlite3_stmt *stmt = sql_prepare::get_stmt("count_sub_task_done");
+    sqlite3_bind_int64(stmt, 1, parent_task);
+    if (sqlite3_step(stmt) == SQLITE_ROW) {
+        if (sqlite3_column_int(stmt, 0) == 0) {
+            update_task_status(parent_task, task_status::done);
+            sqlite3_reset(stmt);
+            check_parent_status(parent_task);
+        }
+    }
+    sqlite3_reset(stmt);
+}
+
 bool task::complete_task(int64_t task_id) {
     const static int64_t delta_time = 60 * 60 * 24 * 1000;
     task::task_t task = get_task_by_id(task_id);
@@ -421,6 +440,7 @@ bool task::complete_task(int64_t task_id) {
     }
     task_status status = task_status::done;
     update_task_status(task_id, status);
+    check_parent_status(task_id);
     std::vector<task_after_effect::after_effect_t> after_effects = task_after_effect::get_after_effects_by_id(task_id);
     assert(after_effects.size() <= 1);
     if (after_effects.empty()) {
@@ -434,7 +454,6 @@ bool task::complete_task(int64_t task_id) {
             return true;
         }
         int64_t now_at = periodic.now_at;
-        int64_t period = periodic.period;
         std::vector<int64_t> intervals = periodic.intervals;
         if (now_at == intervals.size() - 1) {
             after_effect_.periodic.now_at = 0;

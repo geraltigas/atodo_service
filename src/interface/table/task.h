@@ -82,6 +82,8 @@ namespace task {
 
         [[nodiscard]] std::string to_string() const;
     };
+
+    void check_parent_status(int64_t id);
 }
 
 
